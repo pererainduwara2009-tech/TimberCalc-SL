@@ -1,0 +1,513 @@
+:root {
+    /* =========================
+       BRAND / PRIMARY
+    ========================= */
+    --primary: #04382C;
+    --primary-hover: #07513F;
+    --primary-light: #0B6B55;
+
+    /* =========================
+       GREEN ACCENT
+    ========================= */
+    --green: #16803E;
+    --green-light: #EAF7F0;
+    --green-soft: #F2F8F6;
+
+    /* =========================
+       BACKGROUNDS
+    ========================= */
+    --bg: #eff4f3;
+    --surface: #FFFFFF;
+    --surface-soft: #F7FBF9;
+
+    /* =========================
+       TEXT
+    ========================= */
+    --text: #15171A;
+    --text-secondary: #465052;
+    --text-muted: #737A7C;
+
+    /* =========================
+       BORDERS
+    ========================= */
+    --border: #E1E3E3;
+    --border-light: #EEF0EF;
+    --border-green: #D6E9E2;
+
+    /* =========================
+       SUCCESS
+    ========================= */
+    --success: #16803E;
+    --success-bg: #EAF7F0;
+
+    /* =========================
+       WARNING
+    ========================= */
+    --warning: #9A6815;
+    --warning-bg: #FFF9ED;
+    --warning-border: #F2E4B9;
+
+    /* =========================
+       WHITE / BLACK
+    ========================= */
+    --white: #FFFFFF;
+    --black: #000000;
+}
+
+
+/* =========================
+   GLOBAL
+========================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--primary);
+    overflow-x: hidden;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header img {
+    width: 200px;
+    max-width: 80%;
+    margin: 5px;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 100%;
+    min-height: calc(100vh - 60px);
+
+    padding: 1px 0 40px;
+
+    background-color: var(--bg);
+
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+
+/* =========================
+   SAVED LINE
+========================= */
+
+.saved-line {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+.saved-line article {
+    width: 100%;
+    max-width: 1200px;
+
+    min-height: 60px;
+
+    margin: 20px 0;
+    padding: 10px;
+
+    background-color: var(--green-light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+}
+
+.saved-line article div {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.saved-line article div h3 {
+    margin: 0;
+
+    color: var(--green);
+    font-size: 20px;
+    line-height: 20px;
+
+    overflow-wrap: anywhere;
+}
+
+.saved-line article div h3 span {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.saved-line article button {
+    flex: 0 0 100px;
+
+    width: 100px;
+    height: 40px;
+
+    font-weight: bold;
+
+    background-color: var(--white);
+    color: var(--green);
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   EDIT AREA
+========================= */
+
+.edit-area {
+    width: min(90%, 900px);
+
+    margin: 30px auto;
+    padding: 40px 70px;
+
+    background-color: var(--surface);
+
+    border-radius: 10px;
+
+    /* Important */
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   INPUT AREA
+========================= */
+
+.edit-area .input {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.edit-area .topic {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+}
+
+.edit-area .topic button {
+    flex-shrink: 0;
+
+    background: none;
+    border: none;
+
+    font-weight: bold;
+    color: var(--green);
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.selecter {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    line-height: 40px;
+}
+
+label {
+    color: var(--primary);
+}
+
+.selecter select {
+    width: 100%;
+    height: 40px;
+
+    padding: 0 15px;
+
+    background-color: var(--surface-soft);
+
+    border: 2px solid var(--border);
+    border-radius: 10px;
+
+    outline: none;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.inputs {
+    width: 100%;
+
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.inputs .length-and-width {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    gap: 20px;
+}
+
+.inputs .length-and-width div {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    line-height: 40px;
+}
+
+input {
+    width: 100%;
+    height: 40px;
+
+    padding: 0 15px;
+
+    background-color: var(--surface-soft);
+
+    border: 2px solid var(--border);
+    border-radius: 10px;
+
+    outline: none;
+}
+
+
+/* =========================================================
+   TABLET
+   601px - 800px
+========================================================= */
+
+@media (max-width: 800px) {
+
+    main {
+        min-height: calc(100vh - 60px);
+    }
+
+    .saved-line {
+        padding: 0 15px;
+    }
+
+    .edit-area {
+        /* NEVER use width: 100% here */
+        width: calc(100% - 30px);
+        max-width: 700px;
+
+        /* This is what centers it */
+        margin: 25px auto;
+
+        padding: 30px;
+
+        height: auto;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   381px - 600px
+========================================================= */
+
+@media (max-width: 600px) {
+
+    header img {
+        width: 150px;
+        max-width: 60%;
+    }
+
+    main {
+        min-height: calc(100vh - 60px);
+
+        padding: 1px 0 30px;
+
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+
+    /* =========================
+       SAVED ITEM
+    ========================= */
+
+    .saved-line {
+        padding: 0 10px;
+    }
+
+    .saved-line article {
+        width: 100%;
+
+        min-height: 60px;
+
+        margin: 15px 0;
+        padding: 10px;
+
+        gap: 10px;
+    }
+
+    .saved-line article div h3 {
+        font-size: 17px;
+        line-height: 19px;
+    }
+
+    .saved-line article div h3 span {
+        font-size: 12px;
+    }
+
+    .saved-line article button {
+        flex: 0 0 80px;
+
+        width: 80px;
+        min-width: 80px;
+
+        height: 38px;
+    }
+
+
+    /* =========================
+       EDIT AREA
+    ========================= */
+
+    .edit-area {
+        width: calc(100% - 20px);
+        max-width: 500px;
+
+        /* CENTER */
+        margin: 20px auto;
+
+        padding: 20px 15px;
+
+        height: auto;
+    }
+
+
+    .edit-area .topic {
+        flex-direction: row;
+        align-items: stretch;
+
+
+    }
+
+    .inputs {
+        margin-top: 20px;
+    }
+
+    .inputs .length-and-width {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   380px AND BELOW
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .saved-line {
+        padding: 0 8px;
+    }
+
+    .saved-line article {
+        margin: 12px 0;
+        padding: 9px;
+
+        align-items: flex-start;
+    }
+
+    .saved-line article button {
+        flex: 0 0 70px;
+
+        width: 70px;
+        min-width: 70px;
+
+        height: 36px;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================
+       EDIT AREA
+    ========================= */
+
+    .edit-area {
+        width: calc(100% - 16px);
+        max-width: 360px;
+
+        /* ALWAYS CENTER */
+        margin-left: auto;
+        margin-right: auto;
+
+        padding: 16px 12px;
+    }
+
+    .edit-area .topic {
+        gap: 8px;
+    }
+
+    .inputs {
+        margin-top: 18px;
+    }
+
+    input,
+    .selecter select {
+        width: 100%;
+        max-width: 100%;
+
+        height: 40px;
+
+        font-size: 15px;
+    }
+}
