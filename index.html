@@ -15,39 +15,38 @@
 
     <main>
 
-        <section class="saved-line">
-            <article>
-                <div class="saved-line">
-                    <h3>Auto-saved<br>
-                    <span>bill saved on this device</span></h3>
-                </div>
-                <button>View Bill</button>
-            </article>
-        </section>
+         <section class="container">
 
         <section class="edit-area">
 
             <div class="input">
-
+             
                 <div class="topic">
-                    <h2>Add Timber Item</h2>
-                    <button>Clear</button>
+                  <button id="see-area-button" onclick="show()"> 
+                   <div>
+                      <div class="selecter">
+                       <select name="Wood-type" id="wood-type">
+                          <option value="teak">Teak</option>
+                          <option value="maogani">Maogani</option>
+                       </select>
+                       <input type="number" id="price">
+                      </div>
+                   </div>
+                    </button>
+                    <div class="see-area" id="see-area">
+                        <button id="done" onclick="off()">Done</button>
+                    </div>
                 </div>
+               
 
-                <div class="selecter">
-                    <label for="" class="li-label">1.Select timber type</label>
-                    <select name="Wood-type" id="wood-type">
-                        <option value="teak">Teak</option>
-                        <option value="maogani">Maogani</option>
-                    </select>
-                </div>
+                
 
                 <div class="inputs">
 
                     <div class="length-and-width">
 
                         <div class="length-area">
-                            <label for="" class="li-label">2.Length (ft)</label>
+                            <label for="" class="li-label">2.Length (in)</label>
                             <input type="number" class="length" id="length">
                         </div>
 
@@ -63,6 +62,8 @@
                         <div class="thickness-area">
                             <label for="" class="li-label">4.Thickness (in)</label>
                             <input type="number" class="thickness">
+
+                            <button onclick="calculation()">cals</button>
                         </div>
                     </div>
                 </div>
@@ -71,7 +72,36 @@
 
         </section>
 
+        </section>
+
+        <section class="num-pad" id="num-pad">
+            <div>
+                <table>
+                    <tr>
+                        <td><button class="btn">7</button></td>
+                        <td><button class="btn">8</button></td>
+                        <td><button class="btn">9</button></td>
+                        <td><button class="btn" id="c">c</button></td>
+                    </tr>
+                    <tr>
+                        <td><button class="btn">4</button></td>
+                        <td><button class="btn">5</button></td>
+                        <td><button class="btn">6</button></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><button class="btn">1</button></td>
+                        <td><button class="btn">2</button></td>
+                        <td><button class="btn">3</button></td>
+                        <td colspan="2" class="btn" id="e-btn"><button>E</button></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
     </main>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
