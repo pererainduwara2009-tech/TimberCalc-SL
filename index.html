@@ -4,172 +4,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Wood Calculator</title>
-
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-    <!-- =========================
-         HEADER
-    ========================== -->
-    <header>
-        <img src="logo.png" alt="Logo">
-    </header>
+<header>
+    <img src="logo.png" alt="Wood Calculator Logo">
+</header>
 
+<main>
 
-    <!-- =========================
-         MAIN
-    ========================== -->
-    <main>
+    <div class="container">
 
-        <!-- =========================
-             EDIT AREA
-        ========================== -->
-        <section class="container">
+        <!-- Wood selector -->
+        <section class="wood-card">
 
-            <section class="edit-area">
+            <button class="wood-bar-button" onclick="show()">
+                <div class="wood-bar">
 
-                <div class="input">
-
-                    <!-- Wood type and price -->
-                    <div class="topic">
-
-                        <button id="see-area-button" onclick="show()">
-
-                            <div class="selecter">
-
-                                <select name="Wood-type" id="wood-type">
-                                    <option value="teak">Teak</option>
-                                    <option value="maogani">Maogani</option>
-                                </select>
-
-                                <input
-                                    type="number"
-                                    id="price"
-                                    placeholder="Price"
-                                >
-
-                            </div>
-
-                        </button>
-
-
-                        <!-- See area -->
-                        <div class="see-area" id="see-area">
-                            <button id="done" onclick="off()">
-                                Done
-                            </button>
-                        </div>
-
+                    <div class="wood-info">
+                        <span class="wood-label">WOOD</span>
+                        <strong id="selected-wood">Teak</strong>
                     </div>
 
-
-                    <!-- =========================
-                         INPUTS
-                    ========================== -->
-                    <div class="inputs">
-
-                        <!-- Length and Width -->
-                        <div class="length-and-width">
-
-                            <div class="length-area">
-                                <label for="length">
-                                    2. Length (in)
-                                </label>
-
-                                <input
-                                    type="number"
-                                    class="length"
-                                    id="length"
-                                >
-                            </div>
-
-
-                            <div class="width-area">
-    <label for="width">3. Width (in)</label>
-    <input type="number" id="width" class="calculator-input">
-</div>
-
-                        </div>
-
-
-                        <!-- Thickness -->
-                        <div class="thickness-and-quantity">
-
-                           <div class="thickness-area">
-    
-                            <div class="preview">
-                                <table>
-                                    <tr>
-                                        <td id="width">1</td>
-                                        <td id="length">2</td>
-                                        <td id="cft">2.1</td>
-                                        <td class="price">2000</td>
-                                    </tr>
-                                </table>
-                            </div>
-    <button onclick="calculation()">
-        Calculate
-    </button>
-</div>
-
-                        </div>
-
+                    <div class="wood-price">
+                        <span id="selected-price">LKR 0.00</span>
                     </div>
+
+                    <div class="wood-plus">+</div>
+
+                </div>
+            </button>
+
+            <!-- Wood settings -->
+            <div class="see-area" id="see-area">
+
+                <div class="wood-settings">
+
+                    <div class="setting">
+                        <label for="wood-type">Wood Type</label>
+
+                        <select id="wood-type" name="Wood-type">
+                            <option value="teak">Teak</option>
+                            <option value="maogani">Maogani</option>
+                        </select>
+                    </div>
+
+                    <div class="setting">
+                        <label for="price">Price / CFT</label>
+
+                        <input type="number" id="price" placeholder="Enter price">
+                    </div>
+
+                    <button id="done" class="done-button" onclick="off()">
+                        Done
+                    </button>
 
                 </div>
 
-            </section>
+            </div>
 
         </section>
 
-        <section class="num-pad" id="num-pad">
 
-    <button class="btn" onclick="numPress(7)">7</button>
-    <button class="btn" onclick="numPress(8)">8</button>
-    <button class="btn" onclick="numPress(9)">9</button>
+        <!-- Measurement -->
+        <section class="measurement-card">
 
-    <button
-        class="btn clear"
-        id="c"
-        onclick="clearInput()"
-        ondblclick="hide_numpad()">
-        C
-    </button>
+            <div class="section-heading">
+                <span>MEASUREMENT</span>
+                <h2>Enter Dimensions</h2>
+            </div>
 
-    <button class="btn" onclick="numPress(4)">4</button>
-    <button class="btn" onclick="numPress(5)">5</button>
-    <button class="btn" onclick="numPress(6)">6</button>
+            <div class="length-and-width">
 
-    <button class="btn enter" id="e-btn" onclick="nextInput()">
-        E
-    </button>
+                <div class="input-box">
+                    <label for="length">
+                        <span class="number">1</span>
+                        Length <small>(ft)</small>
+                    </label>
 
-    <button class="btn" onclick="numPress(1)">1</button>
-    <button class="btn" onclick="numPress(2)">2</button>
-    <button class="btn" onclick="numPress(3)">3</button>
+                    <input type="number" id="length" class="length" placeholder="0">
+                </div>
 
-</section>
+                <div class="input-box">
+                    <label for="width">
+                        <span class="number">2</span>
+                        Width <small>(in)</small>
+                    </label>
 
-<div id="btn_mark">
-    <button id="show_num" onclick="show_numpad()">Num</button>
-</div>
+                    <input type="number" id="width" class="calculator-input" placeholder="0">
+                </div>
+
+            </div>
+
+            <button class="calculate-btn" onclick="calculation()">
+                Calculate
+            </button>
+
+        </section>
 
 
+        <!-- Total -->
+        <section class="total-card" id="total-see">
+            <span class="total-label">TOTAL</span>
+            <p id="total">LKR 0.00</p>
+        </section>
 
-       
 
-    </main>
+        <!-- Bill -->
+        <section class="bill-card">
+
+            <div class="section-heading">
+                <span>BILL</span>
+                <h2>Bill Summary</h2>
+            </div>
+
+            <div class="preview">
+
+                <table id="table-previwe">
+
+                    <thead>
+                        <tr>
+                            <th>Width</th>
+                            <th>Length</th>
+                            <th>CFT</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="bill-body">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </div>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-    <script src="script.js"></script>
+    <!-- Numpad -->
+    <section class="num-pad" id="num-pad">
+
+        <button class="btn" onclick="numPress(7)">7</button>
+        <button class="btn" onclick="numPress(8)">8</button>
+        <button class="btn" onclick="numPress(9)">9</button>
+
+        <button class="btn clear" id="c" onclick="clearInput()" ondblclick="hide_numpad()">C</button>
+
+        <button class="btn" onclick="numPress(4)">4</button>
+        <button class="btn" onclick="numPress(5)">5</button>
+        <button class="btn" onclick="numPress(6)">6</button>
+
+        <button class="btn enter" id="e-btn" onclick="nextInput()">E</button>
+
+        <button class="btn" onclick="numPress(1)">1</button>
+        <button class="btn" onclick="numPress(2)">2</button>
+        <button class="btn" onclick="numPress(3)">3</button>
+
+    </section>
+
+
+    <!-- Numpad open button -->
+    <div id="btn_mark">
+        <button id="show_num" onclick="show_numpad()">Num</button>
+    </div>
+
+</main>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>

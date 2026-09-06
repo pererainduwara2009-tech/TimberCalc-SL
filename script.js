@@ -1,145 +1,401 @@
+/* ==================================================
+   ELEMENTS
+================================================== */
+
+// Wood selector area
 const see_area = document.getElementById("see-area");
 const done_btn = document.getElementById("done");
 
-function show(){
-    see_area.style.display = "flex";
-};
+// Bill
+const table = document.getElementById("table-previwe");
+const bill_body = document.getElementById("bill-body");
 
-function off(){
+// Total
+const total_area = document.getElementById("total-see");
+const see_total = document.getElementById("total");
+
+// Wood
+const woodType = document.getElementById("wood-type");
+const priceInput = document.getElementById("price");
+
+// Top bar
+const selectedWood = document.getElementById("selected-wood");
+const selectedPrice = document.getElementById("selected-price");
+
+
+/* ==================================================
+   TOTAL
+================================================== */
+
+let total = 0;
+
+
+/* ==================================================
+   SHOW WOOD SETTINGS
+================================================== */
+
+function show() {
+
+    see_area.style.display = "block";
+
+}
+
+
+/* ==================================================
+   DONE
+   UPDATE TOP BAR THEN CLOSE
+================================================== */
+
+function off() {
+
+    /*
+        Get the currently selected
+        wood name from the select box.
+    */
+
+    const woodName =
+        woodType.options[woodType.selectedIndex].text;
+
+
+    /*
+        Get the price from the input.
+    */
+
+    const price =
+        Number(priceInput.value);
+
+
+    /*
+        Update wood name in the top bar.
+    */
+
+    selectedWood.textContent =
+        woodName;
+
+
+    /*
+        Update price in the top bar.
+    */
+
+    if (price > 0) {
+
+        selectedPrice.textContent =
+            "LKR " + price.toLocaleString();
+
+    } else {
+
+        selectedPrice.textContent =
+            "LKR 0.00";
+
+    }
+
+
+    /*
+        Close the expanded area.
+    */
+
     see_area.style.display = "none";
-};
 
-function show_numpad(){
-    num_pad.style.display = "grid";
-    no_btn.style.display = "none";
-    
-};
+}
 
 
-function calculation(){
+/* ==================================================
+   NUMPAD ELEMENTS
+================================================== */
 
-    const price = Number(document.getElementById("price").value)
+const num_pad =
+    document.getElementById("num-pad");
 
-    const leng_in = Number(document.getElementById("length").value);
-    const width_in = Number(document.getElementById("width").value);
+const no_btn =
+    document.getElementById("btn_mark");
 
-    let cft = (leng_in * width_in * width_in) / 2304 ;
-    let price_unit = ("LKR ") + (price * cft).toFixed(2);
 
-    alert(price_unit);
-};
+/* ==================================================
+   LENGTH + WIDTH INPUTS
+================================================== */
 
-const num_pad = document.getElementById("num-pad");
-const no_btn = document.getElementById("btn_mark");
+const lengthInput =
+    document.getElementById("length");
 
-const lengthInput = document.getElementById("length");
-const widthInput = document.getElementById("width");
+const widthInput =
+    document.getElementById("width");
+
 
 const inputs = [
+
     lengthInput,
     widthInput
+
 ];
+
 
 let activeInput = lengthInput;
 
 
-// =========================
-// SELECT ACTIVE INPUT
-// =========================
+/* ==================================================
+   SELECT ACTIVE INPUT
+================================================== */
 
-inputs.forEach(input => {
+inputs.forEach(function (input) {
 
-    input.addEventListener("focus", function () {
-        activeInput = this;
-    });
+    input.addEventListener(
+        "focus",
+        function () {
+
+            activeInput = this;
+
+        }
+    );
 
 });
 
 
-// =========================
-// SHOW NUMPAD
-// =========================
+/* ==================================================
+   SHOW NUMPAD
+================================================== */
 
 function show_numpad() {
 
     num_pad.style.display = "grid";
+
     no_btn.style.display = "none";
 
     activeInput.focus();
+
 }
 
 
-// =========================
-// NUMBER BUTTON
-// =========================
+/* ==================================================
+   CALCULATION
+================================================== */
+
+function calculation() {
+
+
+    /* ----------------------------------------------
+       GET PRICE
+    ---------------------------------------------- */
+
+    const price =
+        Number(priceInput.value);
+
+
+    /* ----------------------------------------------
+       GET LENGTH
+    ---------------------------------------------- */
+
+    const leng_in =
+        Number(lengthInput.value);
+
+
+    /* ----------------------------------------------
+       GET WIDTH
+    ---------------------------------------------- */
+
+    const width_in =
+        Number(widthInput.value);
+
+
+    /* ----------------------------------------------
+       CHECK VALUES
+    ---------------------------------------------- */
+
+    if (
+        price <= 0 ||
+        leng_in <= 0 ||
+        width_in <= 0
+    ) {
+
+        alert(
+            "Please enter wood price, length and width."
+        );
+
+        return;
+
+    }
+
+
+    /* ----------------------------------------------
+       CALCULATE CFT
+    ---------------------------------------------- */
+
+    const cft =
+        (leng_in * width_in * width_in) / 2304;
+
+
+    /* ----------------------------------------------
+       CALCULATE ITEM PRICE
+    ---------------------------------------------- */
+
+    const itemPrice =
+        price * cft;
+
+
+    /* ----------------------------------------------
+       FORMAT ITEM PRICE
+    ---------------------------------------------- */
+
+    const price_unit =
+        "LKR " + itemPrice.toFixed(2);
+
+
+    /* ----------------------------------------------
+       ADD NEW BILL ROW
+    ---------------------------------------------- */
+
+    bill_body.insertAdjacentHTML(
+        "beforeend",
+
+        `
+        <tr>
+
+            <td>
+                ${width_in}
+            </td>
+
+            <td>
+                ${leng_in}
+            </td>
+
+            <td>
+                ${cft.toFixed(2)}
+            </td>
+
+            <td>
+                ${price_unit}
+            </td>
+
+        </tr>
+        `
+    );
+
+
+    /* ----------------------------------------------
+       ADD ITEM PRICE TO TOTAL
+    ---------------------------------------------- */
+
+    total =
+        total + itemPrice;
+
+
+    /* ----------------------------------------------
+       SHOW TOTAL
+    ---------------------------------------------- */
+
+    see_total.textContent =
+        "LKR " + total.toFixed(2);
+
+}
+
+
+/* ==================================================
+   NUMPAD NUMBER
+================================================== */
 
 function numPress(number) {
 
+    /*
+        Add the pressed number
+        to the active input.
+    */
+
     activeInput.value += number;
 
+
+    /*
+        Keep the active input focused.
+    */
+
     activeInput.focus();
+
 }
 
 
-// =========================
-// C - CLEAR ACTIVE INPUT
-// =========================
+/* ==================================================
+   CLEAR ACTIVE INPUT
+================================================== */
 
 function clearInput() {
 
     activeInput.value = "";
 
     activeInput.focus();
+
 }
 
 
-// =========================
-// C DOUBLE TAP - HIDE NUMPAD
-// =========================
+/* ==================================================
+   DOUBLE C
+   HIDE NUMPAD
+================================================== */
 
 function hide_numpad() {
 
-    const length = lengthInput.value;
-    const width = widthInput.value;
+    const leng_in =
+        lengthInput.value;
 
-    // Hide ONLY if both are empty
-    if (length === "" && width === "") {
+    const width_in =
+        widthInput.value;
+
+
+    /*
+        Hide numpad only when
+        both inputs are empty.
+    */
+
+    if (
+        leng_in === "" &&
+        width_in === ""
+    ) {
 
         num_pad.style.display = "none";
+
         no_btn.style.display = "flex";
 
     }
+
 }
 
 
-// =========================
-// E - NEXT INPUT
-// =========================
+/* ==================================================
+   E BUTTON
+   MOVE TO NEXT INPUT
+================================================== */
 
 function nextInput() {
 
-    const currentIndex = inputs.indexOf(activeInput);
+    const currentIndex =
+        inputs.indexOf(activeInput);
 
-    if (currentIndex < inputs.length - 1) {
 
-        activeInput = inputs[currentIndex + 1];
+    /*
+        If there is another input,
+        move to it.
+    */
+
+    if (
+        currentIndex <
+        inputs.length - 1
+    ) {
+
+        activeInput =
+            inputs[currentIndex + 1];
 
         activeInput.focus();
 
-    } else {
+    }
+
+
+    /*
+        Otherwise close numpad.
+    */
+
+    else {
 
         num_pad.style.display = "none";
+
         no_btn.style.display = "flex";
 
     }
-}
 
-function hide_numpad() {
-    const leng_in = document.getElementById("length").value;
-    const width_in = document.getElementById("width").value;
-
-    if (leng_in === "" && width_in === "") {
-        num_pad.style.display = "none";
-        no_btn.style.display = "flex";
-    }
 }
