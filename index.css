@@ -1,55 +1,44 @@
+/* =========================
+   ROOT VARIABLES
+========================= */
+
 :root {
-    /* =========================
-       BRAND / PRIMARY
-    ========================= */
+
+    /* Brand / Primary */
     --primary: #04382C;
     --primary-hover: #07513F;
     --primary-light: #0B6B55;
 
-    /* =========================
-       GREEN ACCENT
-    ========================= */
+    /* Green Accent */
     --green: #16803E;
     --green-light: #EAF7F0;
     --green-soft: #F2F8F6;
 
-    /* =========================
-       BACKGROUNDS
-    ========================= */
+    /* Backgrounds */
     --bg: #eff4f3;
     --surface: #FFFFFF;
     --surface-soft: #F7FBF9;
 
-    /* =========================
-       TEXT
-    ========================= */
+    /* Text */
     --text: #15171A;
     --text-secondary: #465052;
     --text-muted: #737A7C;
 
-    /* =========================
-       BORDERS
-    ========================= */
+    /* Borders */
     --border: #E1E3E3;
     --border-light: #EEF0EF;
     --border-green: #D6E9E2;
 
-    /* =========================
-       SUCCESS
-    ========================= */
+    /* Success */
     --success: #16803E;
     --success-bg: #EAF7F0;
 
-    /* =========================
-       WARNING
-    ========================= */
+    /* Warning */
     --warning: #9A6815;
     --warning-bg: #FFF9ED;
     --warning-border: #F2E4B9;
 
-    /* =========================
-       WHITE / BLACK
-    ========================= */
+    /* White / Black */
     --white: #FFFFFF;
     --black: #000000;
 }
@@ -65,6 +54,7 @@
     box-sizing: border-box;
 }
 
+
 html,
 body {
     margin: 0;
@@ -72,6 +62,7 @@ body {
     width: 100%;
     min-height: 100%;
 }
+
 
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -86,10 +77,12 @@ body {
 
 header {
     width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 
 header img {
     width: 150px;
@@ -104,8 +97,7 @@ header img {
 
 main {
     width: 100%;
-    /*min-height: calc(100vh - 60px);*/
-    height: 200vh;
+    min-height: 100vh;
 
     padding: 1px 0 40px;
 
@@ -116,14 +108,25 @@ main {
 
     display: flex;
     flex-direction: column;
+
+    position: relative;
 }
 
-main .container {
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+    width: 100%;
+
     display: flex;
     flex-direction: row;
+
     margin: 30px;
     gap: 30px;
 }
+
 
 /* =========================
    EDIT AREA
@@ -136,12 +139,9 @@ main .container {
     padding: 40px 70px;
 
     background-color: var(--surface);
+
     border: 1px solid var(--border);
-
     border-radius: 10px;
-
-    /* Important */
-    box-sizing: border-box;
 }
 
 
@@ -154,82 +154,132 @@ main .container {
 
     display: flex;
     flex-direction: column;
+
     justify-content: center;
     align-items: center;
 }
 
 
-.topic button{
-   background-color: transparent;
-   border: none;
-}
+/* =========================
+   TOPIC
+========================= */
 
-.see-area {
-    display: none;
-    justify-content: center;
-    height: 400px;
+.topic {
     width: 100%;
-    background-color: var(--surface-soft);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin: 20px 10px;
 }
 
-.see-area button{
-    height: 40px;
+
+.topic > button {
     width: 100%;
-    background-color: var(--primary-hover);
-    margin: 10px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-}
 
-.topic .selecter {
-    background-color: var(--green-light);
-    border: 1px solid var(--border-green);
+    padding: 0;
 
-    border-radius: 10px;
-
-     width: 100%;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.topic .selecter select {
     background-color: transparent;
-    border-right: 1px solid var(--border-green);
-    border-left: none;
-    border-top: none;
-    border-bottom: none;
 
-    height: 50px;
-    padding: 0px 30px;
-}
-
-.topic .selecter input {
-    background-color: transparent;
     border: none;
 }
 
+
 /* =========================
-   SELECT
+   SELECTER
 ========================= */
 
-.selecter {
+.topic .selecter {
     width: 100%;
 
-    display: flex;
-    flex-direction: column;
+    background-color: var(--green-light);
 
-    line-height: 40px;
+    border: 1px solid var(--border-green);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+
+    overflow: hidden;
 }
+
+
+.topic .selecter select {
+    height: 50px;
+
+    padding: 0 30px;
+
+    background-color: transparent;
+
+    border: none;
+    border-right: 1px solid var(--border-green);
+
+    outline: none;
+}
+
+
+.topic .selecter input {
+    flex: 1;
+
+    width: auto;
+
+    height: 50px;
+
+    background-color: transparent;
+
+    border: none;
+    border-radius: 0;
+}
+
+
+/* =========================
+   SEE AREA
+========================= */
+
+.see-area {
+    display: none;
+
+    justify-content: center;
+
+    width: 100%;
+    height: 400px;
+
+    margin: 20px 10px;
+
+    background-color: var(--surface-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+}
+
+
+.see-area button {
+    width: 100%;
+    height: 40px;
+
+    margin: 10px;
+
+    background-color: var(--primary-hover);
+
+    border: none;
+    border-radius: 10px;
+
+    color: var(--white);
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   LABELS
+========================= */
 
 label {
     color: var(--primary);
+}
+
+
+.li-label {
+    line-height: 40px;
 }
 
 
@@ -246,7 +296,12 @@ label {
     flex-direction: column;
 }
 
-.inputs .length-and-width {
+
+/* =========================
+   LENGTH + WIDTH
+========================= */
+
+.length-and-width {
     width: 100%;
 
     display: flex;
@@ -255,7 +310,8 @@ label {
     gap: 20px;
 }
 
-.inputs .length-and-width div {
+
+.length-and-width > div {
     width: 100%;
 
     display: flex;
@@ -263,6 +319,51 @@ label {
 
     line-height: 40px;
 }
+
+
+/* =========================
+   THICKNESS
+========================= */
+
+.thickness-and-quantity {
+    width: 100%;
+}
+
+
+.thickness-area {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    line-height: 40px;
+}
+
+
+.thickness-area > button {
+    margin-top: 10px;
+
+    height: 40px;
+
+    background-color: var(--primary);
+
+    color: var(--white);
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+.thickness-area > button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* =========================
+   ALL INPUTS
+========================= */
 
 input {
     width: 100%;
@@ -273,39 +374,228 @@ input {
     background-color: var(--surface-soft);
 
     border: 2px solid var(--border);
+
     border-radius: 10px;
 
     outline: none;
 }
 
+
+input:focus {
+    border-color: var(--primary-light);
+}
+
+
+/* ==================================================
+   NUMPAD
+================================================== */
+
 .num-pad {
+    width: min(100%, 360px);
+
+    margin: 350px auto;
+
+    padding: 20px;
+
+    display: none;
+
+    /*
+        4 equal columns:
+
+        7 | 8 | 9 | C
+        4 | 5 | 6 | E
+        1 | 2 | 3 | E
+    */
+    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-rows: repeat(3, 60px);
+
+    gap: 10px;
+
+    background-color: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    position: fixed;
+}
+
+
+/* =========================
+   NUMPAD BUTTONS
+========================= */
+
+.num-pad .btn {
     width: 100%;
     height: 100%;
 
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--surface-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--primary);
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease;
 }
 
-.num-pad .btn {
+
+.num-pad .btn:hover {
+    background-color: var(--green-light);
+}
+
+
+.num-pad .btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================
+   CLEAR BUTTON
+========================= */
+
+.num-pad #c {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+
+.num-pad #c:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* =========================
+   E BUTTON
+========================= */
+
+/*
+    E occupies the entire
+    4th column and 2 rows.
+*/
+
+.num-pad #e-btn {
+    grid-column: 4;
+    grid-row: 2 / 4;
+
+    background-color: var(--green);
+    color: var(--white);
+}
+
+
+.num-pad #e-btn:hover {
+    background-color: var(--primary-light);
+}
+
+
+#show_num {
+    width: 60px;
+    height: 60px;
+
+    color: var(--white);
+    background-color: var(--green);
+
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+#btn_mark {
+    position: fixed;
+    right: 20px;
+    bottom: 150px;
+
+    width: auto;
+    height: auto;
+
+    padding: 0;
+
+    display: flex;
+
+    z-index: 100;
+}
+
+.preview table {
+    width: 100%;
     height: 40px;
-    width: 40px;
+
+    margin-top: 15px;
+    background-color: var(--green-soft);
+    border: 2px solid var(--border);
+    border-radius: 10px;
 }
 
-#e-btn {
-    height: 80px;
-    width: 40px;
+.preview table tr {
+    padding: 0px 20px;
+    text-align: center;
 }
 
-@media(max-width: 600px){
+.preview table tr td {
+    border-right: 2px solid var(--border);
+}
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
     main {
-        display: flex;
+        min-height: 100vh;
+
+        padding: 0;
+
         align-items: center;
-        height: 100vh;
-        padding: 0px;
     }
 
+
+    .container {
+        width: 100%;
+
+        margin: 20px 0;
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+
     .edit-area {
-        padding: 20px;
+        width: calc(100% - 30px);
+
         margin: 0;
 
-        width: 100%;
+        padding: 20px;
+    }
+
+
+    .length-and-width {
+        gap: 10px;
+    }
+
+
+    .num-pad {
+        width: calc(100% - 30px);
+
+        max-width: 360px;
+
+        margin-bottom: 30px;
     }
 }
