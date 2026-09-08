@@ -2,6 +2,7 @@
 // WOOD CALCULATOR
 // ======================================================
 
+
 // ======================================================
 // SUPABASE
 // ======================================================
@@ -24,12 +25,22 @@ const supabaseClient =
 // ======================================================
 
 let currentUser = null;
+
 let currentItems = [];
+
 let editingBillId = null;
+
 let selectedInput = null;
+
 let downloadBillId = null;
+
 let pendingAdAction = null;
+
 let currentLanguage = "en";
+
+let tutorialStep = 0;
+
+let tutorialActive = false;
 
 
 // ======================================================
@@ -39,69 +50,266 @@ let currentLanguage = "en";
 const translations = {
 
     en: {
+
         wood: "WOOD",
         woodType: "Wood Type",
         price: "Price / CFT",
+
         measurement: "MEASUREMENT",
         enterDimensions: "Enter Dimensions",
+
         calculate: "Calculate",
+
         total: "TOTAL",
+        totalCFT: "TOTAL CFT",
+        totalPrice: "TOTAL PRICE",
+
         bill: "BILL",
         billSummary: "Bill Summary",
+
         saveBill: "Save Bill",
         updateBill: "Update Bill",
         savedBills: "Saved Bills",
+
         yourBills: "YOUR BILLS",
         billDetails: "BILL DETAILS",
+
         downloadBill: "DOWNLOAD BILL",
+
         businessName: "Business name",
+
         downloadPDF: "Download PDF",
         saveImage: "Save Image",
-        advertisement: "Advertisement"
+
+        advertisement: "Advertisement",
+
+        width: "Width",
+        length: "Length",
+        cft: "CFT",
+        priceColumn: "Price",
+        action: "Action",
+
+        welcomeTitle: "Welcome 👋",
+        welcomeText: "Choose your language to get started.",
+
+        tutorial: [
+            {
+                icon: "🌲",
+                title: "Choose your wood",
+                text: "Tap the WOOD section to select the type of wood you are calculating."
+            },
+            {
+                icon: "💰",
+                title: "Enter the price",
+                text: "Enter the selling price for one CFT of your selected wood."
+            },
+            {
+                icon: "📏",
+                title: "Enter dimensions",
+                text: "Enter the length in feet and width in inches."
+            },
+            {
+                icon: "🧮",
+                title: "Calculate",
+                text: "Press Calculate. The calculator will calculate the CFT and price for this item."
+            },
+            {
+                icon: "📊",
+                title: "Check your total",
+                text: "Your total CFT and total price will appear here. You can add multiple wood items to one bill."
+            },
+            {
+                icon: "💾",
+                title: "Save your bill",
+                text: "Press Save Bill to keep the bill safely in your saved bills."
+            },
+            {
+                icon: "📁",
+                title: "Saved Bills",
+                text: "Open Saved Bills anytime to view, edit, delete or download your bills."
+            }
+        ],
+
+        next: "Next",
+        finish: "Finish",
+        skip: "Skip"
+
     },
 
+
     si: {
+
         wood: "දැව",
         woodType: "දැව වර්ගය",
         price: "CFT මිල",
+
         measurement: "මිනුම්",
         enterDimensions: "මාන ඇතුළත් කරන්න",
+
         calculate: "ගණනය කරන්න",
+
         total: "මුළු එකතුව",
+        totalCFT: "මුළු CFT",
+        totalPrice: "මුළු මිල",
+
         bill: "බිල්පත",
         billSummary: "බිල්පත් සාරාංශය",
+
         saveBill: "බිල්පත සුරකින්න",
         updateBill: "බිල්පත යාවත්කාලීන කරන්න",
         savedBills: "සුරකින ලද බිල්පත්",
+
         yourBills: "ඔබගේ බිල්පත්",
         billDetails: "බිල්පත් විස්තර",
+
         downloadBill: "බිල්පත බාගත කරන්න",
+
         businessName: "ව්‍යාපාරයේ නම",
+
         downloadPDF: "PDF බාගත කරන්න",
         saveImage: "පින්තූරය සුරකින්න",
-        advertisement: "වෙළඳ දැන්වීම"
+
+        advertisement: "වෙළඳ දැන්වීම",
+
+        width: "පළල",
+        length: "දිග",
+        cft: "CFT",
+        priceColumn: "මිල",
+        action: "ක්‍රියාව",
+
+        welcomeTitle: "සාදරයෙන් පිළිගනිමු 👋",
+        welcomeText: "ආරම්භ කිරීමට ඔබගේ භාෂාව තෝරන්න.",
+
+        tutorial: [
+            {
+                icon: "🌲",
+                title: "දැව වර්ගය තෝරන්න",
+                text: "ඔබට ගණනය කිරීමට අවශ්‍ය දැව වර්ගය තේරීමට WOOD කොටස ඔබන්න."
+            },
+            {
+                icon: "💰",
+                title: "මිල ඇතුළත් කරන්න",
+                text: "තෝරාගත් දැවයේ එක් CFT එකක මිල ඇතුළත් කරන්න."
+            },
+            {
+                icon: "📏",
+                title: "මාන ඇතුළත් කරන්න",
+                text: "දිග අඩි වලින් සහ පළල අඟල් වලින් ඇතුළත් කරන්න."
+            },
+            {
+                icon: "🧮",
+                title: "ගණනය කරන්න",
+                text: "Calculate ඔබන්න. එවිට එම දැව කැබැල්ලේ CFT සහ මිල ගණනය වේ."
+            },
+            {
+                icon: "📊",
+                title: "මුළු එකතුව බලන්න",
+                text: "ඔබගේ මුළු CFT සහ මුළු මිල මෙහි පෙන්වනු ඇත. එකම බිල්පතකට දැව අයිතම කිහිපයක් එක් කළ හැක."
+            },
+            {
+                icon: "💾",
+                title: "බිල්පත සුරකින්න",
+                text: "Save Bill ඔබා බිල්පත සුරකින්න."
+            },
+            {
+                icon: "📁",
+                title: "සුරකින ලද බිල්පත්",
+                text: "Saved Bills හරහා බිල්පත් බලන්න, සංස්කරණය කරන්න, මකා දමන්න හෝ බාගත කරන්න."
+            }
+        ],
+
+        next: "ඊළඟ",
+        finish: "අවසන්",
+        skip: "මඟහරින්න"
+
     },
 
+
     ta: {
+
         wood: "மரம்",
         woodType: "மர வகை",
         price: "CFT விலை",
+
         measurement: "அளவீடு",
         enterDimensions: "அளவுகளை உள்ளிடவும்",
+
         calculate: "கணக்கிடு",
+
         total: "மொத்தம்",
+        totalCFT: "மொத்த CFT",
+        totalPrice: "மொத்த விலை",
+
         bill: "பில்",
         billSummary: "பில் சுருக்கம்",
+
         saveBill: "பில் சேமி",
         updateBill: "பில் புதுப்பி",
         savedBills: "சேமித்த பில்கள்",
+
         yourBills: "உங்கள் பில்கள்",
         billDetails: "பில் விவரங்கள்",
+
         downloadBill: "பில் பதிவிறக்கம்",
+
         businessName: "வணிகத்தின் பெயர்",
+
         downloadPDF: "PDF பதிவிறக்கம்",
         saveImage: "படமாக சேமி",
-        advertisement: "விளம்பரம்"
+
+        advertisement: "விளம்பரம்",
+
+        width: "அகலம்",
+        length: "நீளம்",
+        cft: "CFT",
+        priceColumn: "விலை",
+        action: "செயல்",
+
+        welcomeTitle: "வரவேற்கிறோம் 👋",
+        welcomeText: "தொடங்க உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்.",
+
+        tutorial: [
+            {
+                icon: "🌲",
+                title: "மர வகையைத் தேர்ந்தெடுக்கவும்",
+                text: "கணக்கிட வேண்டிய மர வகையைத் தேர்ந்தெடுக்க WOOD பகுதியைத் தட்டவும்."
+            },
+            {
+                icon: "💰",
+                title: "விலையை உள்ளிடவும்",
+                text: "தேர்ந்தெடுத்த மரத்தின் ஒரு CFT விலையை உள்ளிடவும்."
+            },
+            {
+                icon: "📏",
+                title: "அளவுகளை உள்ளிடவும்",
+                text: "நீளத்தை அடியிலும் அகலத்தை அங்குலத்திலும் உள்ளிடவும்."
+            },
+            {
+                icon: "🧮",
+                title: "கணக்கிடவும்",
+                text: "Calculate பொத்தானை அழுத்தவும். CFT மற்றும் விலை கணக்கிடப்படும்."
+            },
+            {
+                icon: "📊",
+                title: "மொத்தத்தைப் பார்க்கவும்",
+                text: "மொத்த CFT மற்றும் மொத்த விலை இங்கே காட்டப்படும்."
+            },
+            {
+                icon: "💾",
+                title: "பில்லை சேமிக்கவும்",
+                text: "Save Bill பொத்தானை அழுத்தி பில்லை சேமிக்கவும்."
+            },
+            {
+                icon: "📁",
+                title: "சேமித்த பில்கள்",
+                text: "Saved Bills மூலம் உங்கள் பில்களைப் பார்க்க, திருத்த, நீக்க அல்லது பதிவிறக்க முடியும்."
+            }
+        ],
+
+        next: "அடுத்து",
+        finish: "முடி",
+        skip: "தவிர்க்க"
+
     }
 
 };
@@ -119,17 +327,22 @@ document.addEventListener(
 
         setupLanguage();
 
+        setupWelcome();
+
         updateSelectedWood();
 
         await initializeUser();
 
         renderCurrentBill();
+
+        initializeOnboarding();
+
     }
 );
 
 
 // ======================================================
-// SUPABASE ANONYMOUS LOGIN
+// USER
 // ======================================================
 
 async function initializeUser() {
@@ -139,12 +352,13 @@ async function initializeUser() {
         const {
             data: sessionData,
             error: sessionError
-        } =
-            await supabaseClient.auth.getSession();
+        } = await supabaseClient.auth.getSession();
+
 
         if (sessionError) {
             console.error(sessionError);
         }
+
 
         if (
             sessionData &&
@@ -162,8 +376,8 @@ async function initializeUser() {
         const {
             data,
             error
-        } =
-            await supabaseClient.auth.signInAnonymously();
+        } = await supabaseClient.auth.signInAnonymously();
+
 
         if (error) {
 
@@ -179,7 +393,9 @@ async function initializeUser() {
             return;
         }
 
-        currentUser = data.user;
+
+        currentUser =
+            data.user;
 
     }
     catch (error) {
@@ -188,12 +404,14 @@ async function initializeUser() {
             "User initialization error:",
             error
         );
+
     }
+
 }
 
 
 // ======================================================
-// LANGUAGE
+// LANGUAGE SETUP
 // ======================================================
 
 function setupLanguage() {
@@ -203,7 +421,29 @@ function setupLanguage() {
             "language-select"
         );
 
+
     if (!language) return;
+
+
+    const savedLanguage =
+        localStorage.getItem(
+            "woodCalculatorLanguage"
+        );
+
+
+    if (
+        savedLanguage &&
+        translations[savedLanguage]
+    ) {
+
+        currentLanguage =
+            savedLanguage;
+
+        language.value =
+            savedLanguage;
+
+    }
+
 
     language.addEventListener(
         "change",
@@ -212,16 +452,32 @@ function setupLanguage() {
             currentLanguage =
                 this.value;
 
+            localStorage.setItem(
+                "woodCalculatorLanguage",
+                currentLanguage
+            );
+
             applyTranslations();
+
+            if (tutorialActive) {
+                renderTutorialStep();
+            }
+
         }
     );
+
 }
 
+
+// ======================================================
+// APPLY TRANSLATIONS
+// ======================================================
 
 function applyTranslations() {
 
     const t =
         translations[currentLanguage];
+
 
     const woodLabel =
         document.querySelector(
@@ -229,7 +485,8 @@ function applyTranslations() {
         );
 
     if (woodLabel) {
-        woodLabel.textContent = t.wood;
+        woodLabel.textContent =
+            t.wood;
     }
 
 
@@ -238,6 +495,7 @@ function applyTranslations() {
             ".setting label"
         );
 
+
     if (settingLabels.length >= 2) {
 
         settingLabels[0].textContent =
@@ -245,6 +503,7 @@ function applyTranslations() {
 
         settingLabels[1].textContent =
             t.price;
+
     }
 
 
@@ -252,6 +511,7 @@ function applyTranslations() {
         document.querySelectorAll(
             ".section-heading"
         );
+
 
     if (sectionHeadings.length >= 2) {
 
@@ -271,31 +531,35 @@ function applyTranslations() {
             sectionHeadings[1]
                 .querySelector("h2");
 
+
         if (firstSpan)
             firstSpan.textContent =
                 t.measurement;
+
 
         if (firstH2)
             firstH2.textContent =
                 t.enterDimensions;
 
+
         if (secondSpan)
             secondSpan.textContent =
                 t.bill;
 
+
         if (secondH2)
             secondH2.textContent =
                 t.billSummary;
+
     }
 
 
     const calculateButton =
-        document.querySelector(
-            ".calculate-btn:not(.bill-action)"
+        document.getElementById(
+            "calculate-btn"
         );
 
     if (calculateButton) {
-
         calculateButton.textContent =
             t.calculate;
     }
@@ -312,6 +576,7 @@ function applyTranslations() {
             editingBillId
                 ? t.updateBill
                 : t.saveBill;
+
     }
 
 
@@ -321,7 +586,6 @@ function applyTranslations() {
         );
 
     if (savedButton) {
-
         savedButton.textContent =
             t.savedBills;
     }
@@ -333,8 +597,772 @@ function applyTranslations() {
 
             element.textContent =
                 t.advertisement;
+
         });
+
+
+    const totalCFTLabel =
+        document.querySelector(
+            ".total-box:first-child .total-label"
+        );
+
+    if (totalCFTLabel) {
+        totalCFTLabel.textContent =
+            t.totalCFT;
+    }
+
+
+    const totalPriceLabel =
+        document.querySelector(
+            ".total-price-box .total-label"
+        );
+
+    if (totalPriceLabel) {
+        totalPriceLabel.textContent =
+            t.totalPrice;
+    }
+
+
+    const welcomeTitle =
+        document.getElementById(
+            "welcome-title"
+        );
+
+    const welcomeText =
+        document.getElementById(
+            "welcome-text"
+        );
+
+
+    if (welcomeTitle) {
+        welcomeTitle.textContent =
+            t.welcomeTitle;
+    }
+
+
+    if (welcomeText) {
+        welcomeText.textContent =
+            t.welcomeText;
+    }
+
 }
+
+
+// ======================================================
+// WELCOME SCREEN
+// ======================================================
+
+function setupWelcome() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".language-choice-btn"
+        );
+
+
+    buttons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const language =
+                        this.dataset.language;
+
+
+                    if (
+                        !translations[language]
+                    ) {
+                        return;
+                    }
+
+
+                    currentLanguage =
+                        language;
+
+
+                    localStorage.setItem(
+                        "woodCalculatorLanguage",
+                        language
+                    );
+
+
+                    localStorage.setItem(
+                        "woodCalculatorWelcomeSeen",
+                        "true"
+                    );
+
+
+                    const select =
+                        document.getElementById(
+                            "language-select"
+                        );
+
+
+                    if (select) {
+                        select.value =
+                            language;
+                    }
+
+
+                    applyTranslations();
+
+
+                    hideWelcome();
+
+
+                    setTimeout(
+                        function () {
+                            startTutorial();
+                        },
+                        350
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// HIDE WELCOME
+// ======================================================
+
+function hideWelcome() {
+
+    const screen =
+        document.getElementById(
+            "welcome-screen"
+        );
+
+    if (!screen) return;
+
+    screen.classList.add(
+        "hidden"
+    );
+
+}
+
+
+// ======================================================
+// ONBOARDING INITIALIZATION
+// ======================================================
+
+function initializeOnboarding() {
+
+    applyTranslations();
+
+
+    const welcomeSeen =
+        localStorage.getItem(
+            "woodCalculatorWelcomeSeen"
+        );
+
+
+    const savedLanguage =
+        localStorage.getItem(
+            "woodCalculatorLanguage"
+        );
+
+
+    if (
+        welcomeSeen !== "true" ||
+        !savedLanguage
+    ) {
+
+        const screen =
+            document.getElementById(
+                "welcome-screen"
+            );
+
+        if (screen) {
+            screen.classList.remove(
+                "hidden"
+            );
+        }
+
+        return;
+
+    }
+
+
+    hideWelcome();
+
+
+    const tutorialSeen =
+        localStorage.getItem(
+            "woodCalculatorTutorialSeen"
+        );
+
+
+    if (tutorialSeen !== "true") {
+
+        setTimeout(
+            function () {
+                startTutorial();
+            },
+            500
+        );
+
+    }
+
+}
+
+
+// ======================================================
+// START TUTORIAL
+// ======================================================
+
+function startTutorial() {
+
+    const overlay =
+        document.getElementById(
+            "tutorial-overlay"
+        );
+
+
+    if (!overlay) return;
+
+
+    tutorialActive = true;
+
+    tutorialStep = 0;
+
+
+    overlay.classList.add(
+        "active"
+    );
+
+
+    prepareTutorialVisibility();
+
+
+    renderTutorialStep();
+
+}
+
+
+// ======================================================
+// PREPARE TUTORIAL
+// ======================================================
+
+function prepareTutorialVisibility() {
+
+    const saveButton =
+        document.getElementById(
+            "save-bill-btn"
+        );
+
+    const savedButton =
+        document.getElementById(
+            "saved-bills-btn"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.classList.add(
+            "tour-force-visible"
+        );
+
+    }
+
+
+    if (savedButton) {
+
+        savedButton.classList.add(
+            "tour-force-visible"
+        );
+
+    }
+
+}
+
+
+// ======================================================
+// TUTORIAL STEPS
+// ======================================================
+
+const tutorialTargets = [
+
+    "tour-wood",
+
+    "tour-price",
+
+    "tour-length",
+
+    "calculate-btn",
+
+    "total-see",
+
+    "save-bill-btn",
+
+    "saved-bills-btn"
+
+];
+
+
+// ======================================================
+// RENDER TUTORIAL STEP
+// ======================================================
+
+function renderTutorialStep() {
+
+    if (!tutorialActive) return;
+
+
+    const t =
+        translations[currentLanguage];
+
+
+    const step =
+        t.tutorial[tutorialStep];
+
+
+    if (!step) return;
+
+
+    const targetId =
+        tutorialTargets[tutorialStep];
+
+
+    const target =
+        document.getElementById(
+            targetId
+        );
+
+
+    if (!target) return;
+
+
+    // Open wood settings when reaching price step
+
+    if (tutorialStep === 1) {
+
+        const area =
+            document.getElementById(
+                "see-area"
+            );
+
+        if (area) {
+            area.classList.add(
+                "active"
+            );
+        }
+
+    }
+
+
+    // Scroll target into view
+
+    target.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+
+    setTimeout(
+        function () {
+
+            positionTutorial(
+                target
+            );
+
+        },
+        350
+    );
+
+
+    const icon =
+        document.getElementById(
+            "tutorial-icon"
+        );
+
+    const title =
+        document.getElementById(
+            "tutorial-title"
+        );
+
+    const text =
+        document.getElementById(
+            "tutorial-text"
+        );
+
+    const stepNumber =
+        document.getElementById(
+            "tutorial-step-number"
+        );
+
+    const totalSteps =
+        document.getElementById(
+            "tutorial-total-steps"
+        );
+
+    const next =
+        document.getElementById(
+            "tutorial-next"
+        );
+
+    const skip =
+        document.getElementById(
+            "tutorial-skip"
+        );
+
+
+    if (icon) {
+        icon.textContent =
+            step.icon;
+    }
+
+
+    if (title) {
+        title.textContent =
+            step.title;
+    }
+
+
+    if (text) {
+        text.textContent =
+            step.text;
+    }
+
+
+    if (stepNumber) {
+        stepNumber.textContent =
+            tutorialStep + 1;
+    }
+
+
+    if (totalSteps) {
+        totalSteps.textContent =
+            t.tutorial.length;
+    }
+
+
+    if (next) {
+
+        next.textContent =
+            tutorialStep ===
+            t.tutorial.length - 1
+                ? t.finish
+                : t.next;
+
+    }
+
+
+    if (skip) {
+        skip.textContent =
+            t.skip;
+    }
+
+}
+
+
+// ======================================================
+// POSITION TUTORIAL
+// ======================================================
+
+function positionTutorial(target) {
+
+    const spotlight =
+        document.getElementById(
+            "tutorial-spotlight"
+        );
+
+    const pointer =
+        document.getElementById(
+            "tutorial-pointer"
+        );
+
+    const card =
+        document.getElementById(
+            "tutorial-card"
+        );
+
+
+    if (
+        !spotlight ||
+        !pointer ||
+        !card
+    ) {
+        return;
+    }
+
+
+    const rect =
+        target.getBoundingClientRect();
+
+
+    const padding = 5;
+
+
+    spotlight.style.top =
+        `${rect.top - padding}px`;
+
+    spotlight.style.left =
+        `${rect.left - padding}px`;
+
+    spotlight.style.width =
+        `${rect.width + padding * 2}px`;
+
+    spotlight.style.height =
+        `${rect.height + padding * 2}px`;
+
+
+    // Pointer
+
+    let pointerTop =
+        rect.bottom + 12;
+
+    let pointerLeft =
+        rect.left +
+        rect.width / 2 -
+        21;
+
+
+    if (
+        pointerTop + 42 >
+        window.innerHeight
+    ) {
+
+        pointerTop =
+            rect.top - 55;
+
+    }
+
+
+    pointer.style.top =
+        `${Math.max(10, pointerTop)}px`;
+
+    pointer.style.left =
+        `${Math.max(10, pointerLeft)}px`;
+
+
+    // Tutorial card
+
+    const cardWidth =
+        Math.min(
+            390,
+            window.innerWidth - 30
+        );
+
+
+    let cardLeft =
+        rect.left +
+        rect.width / 2 -
+        cardWidth / 2;
+
+
+    cardLeft =
+        Math.max(
+            15,
+            Math.min(
+                cardLeft,
+                window.innerWidth -
+                cardWidth -
+                15
+            )
+        );
+
+
+    let cardTop =
+        rect.bottom + 70;
+
+
+    if (
+        cardTop + 260 >
+        window.innerHeight
+    ) {
+
+        cardTop =
+            rect.top - 280;
+
+    }
+
+
+    cardTop =
+        Math.max(
+            15,
+            cardTop
+        );
+
+
+    card.style.width =
+        `${cardWidth}px`;
+
+    card.style.left =
+        `${cardLeft}px`;
+
+    card.style.top =
+        `${cardTop}px`;
+
+}
+
+
+// ======================================================
+// NEXT TUTORIAL
+// ======================================================
+
+function nextTutorialStep() {
+
+    const t =
+        translations[currentLanguage];
+
+
+    if (
+        tutorialStep >=
+        t.tutorial.length - 1
+    ) {
+
+        finishTutorial();
+
+        return;
+
+    }
+
+
+    tutorialStep++;
+
+    renderTutorialStep();
+
+}
+
+
+// ======================================================
+// FINISH TUTORIAL
+// ======================================================
+
+function finishTutorial() {
+
+    localStorage.setItem(
+        "woodCalculatorTutorialSeen",
+        "true"
+    );
+
+
+    tutorialActive = false;
+
+
+    const overlay =
+        document.getElementById(
+            "tutorial-overlay"
+        );
+
+
+    if (overlay) {
+        overlay.classList.remove(
+            "active"
+        );
+    }
+
+
+    // Restore normal button visibility
+
+    const saveButton =
+        document.getElementById(
+            "save-bill-btn"
+        );
+
+    const savedButton =
+        document.getElementById(
+            "saved-bills-btn"
+        );
+
+
+    if (saveButton) {
+        saveButton.classList.remove(
+            "tour-force-visible"
+        );
+    }
+
+
+    if (savedButton) {
+        savedButton.classList.remove(
+            "tour-force-visible"
+        );
+    }
+
+
+    renderCurrentBill();
+
+}
+
+
+// ======================================================
+// TUTORIAL BUTTONS
+// ======================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const next =
+            document.getElementById(
+                "tutorial-next"
+            );
+
+        const skip =
+            document.getElementById(
+                "tutorial-skip"
+            );
+
+
+        if (next) {
+
+            next.addEventListener(
+                "click",
+                nextTutorialStep
+            );
+
+        }
+
+
+        if (skip) {
+
+            skip.addEventListener(
+                "click",
+                finishTutorial
+            );
+
+        }
+
+    }
+);
+
+
+// ======================================================
+// RECALCULATE TUTORIAL POSITION
+// ======================================================
+
+window.addEventListener(
+    "resize",
+    function () {
+
+        if (!tutorialActive) return;
+
+
+        const targetId =
+            tutorialTargets[
+                tutorialStep
+            ];
+
+
+        const target =
+            document.getElementById(
+                targetId
+            );
+
+
+        if (target) {
+            positionTutorial(target);
+        }
+
+    }
+);
 
 
 // ======================================================
@@ -344,13 +1372,19 @@ function applyTranslations() {
 function setupCalculatorInputs() {
 
     const price =
-        document.getElementById("price");
+        document.getElementById(
+            "price"
+        );
 
     const length =
-        document.getElementById("length");
+        document.getElementById(
+            "length"
+        );
 
     const width =
-        document.getElementById("width");
+        document.getElementById(
+            "width"
+        );
 
 
     if (price) {
@@ -359,9 +1393,12 @@ function setupCalculatorInputs() {
             "focus",
             function () {
 
-                selectedInput = price;
+                selectedInput =
+                    price;
+
             }
         );
+
     }
 
 
@@ -371,9 +1408,12 @@ function setupCalculatorInputs() {
             "focus",
             function () {
 
-                selectedInput = length;
+                selectedInput =
+                    length;
+
             }
         );
+
     }
 
 
@@ -383,13 +1423,18 @@ function setupCalculatorInputs() {
             "focus",
             function () {
 
-                selectedInput = width;
+                selectedInput =
+                    width;
+
             }
         );
+
     }
 
 
-    selectedInput = price;
+    selectedInput =
+        price;
+
 }
 
 
@@ -404,9 +1449,14 @@ function show() {
             "see-area"
         );
 
+
     if (!area) return;
 
-    area.classList.add("active");
+
+    area.classList.add(
+        "active"
+    );
+
 }
 
 
@@ -417,14 +1467,24 @@ function off() {
             "see-area"
         );
 
+
     if (area) {
 
-        area.classList.remove("active");
+        area.classList.remove(
+            "active"
+        );
+
     }
 
+
     updateSelectedWood();
+
 }
 
+
+// ======================================================
+// UPDATE SELECTED WOOD
+// ======================================================
 
 function updateSelectedWood() {
 
@@ -458,6 +1518,7 @@ function updateSelectedWood() {
             wood.options[
                 wood.selectedIndex
             ].text;
+
     }
 
 
@@ -469,14 +1530,18 @@ function updateSelectedWood() {
 
         selectedPrice.textContent =
             "LKR " +
-            Number(price.value).toFixed(2);
+            Number(
+                price.value
+            ).toFixed(2);
 
     }
     else if (selectedPrice) {
 
         selectedPrice.textContent =
             "LKR 0.00";
+
     }
+
 }
 
 
@@ -528,10 +1593,12 @@ function calculation() {
             priceInput.value
         );
 
+
     const length =
         parseFloat(
             lengthInput.value
         );
+
 
     const width =
         parseFloat(
@@ -550,6 +1617,7 @@ function calculation() {
         );
 
         return;
+
     }
 
 
@@ -564,10 +1632,21 @@ function calculation() {
         );
 
         return;
+
     }
 
 
-    // CFT calculation
+    // ==================================================
+    // CFT
+    // Formula:
+    // Length(ft) × Width(in) × Thickness(in) / 144
+    //
+    // Your original app uses width twice,
+    // so the same calculation is preserved:
+    //
+    // length × width × width / 2304
+    // ==================================================
+
     const cft =
         (
             length *
@@ -582,23 +1661,35 @@ function calculation() {
 
     const item = {
 
-        localId: Date.now(),
+        localId:
+            Date.now() +
+            Math.random(),
 
-        wood_type: woodType,
+        wood_type:
+            woodType,
 
-        price_per_cft: price,
+        price_per_cft:
+            price,
 
-        length_ft: length,
+        length_ft:
+            length,
 
-        width_in: width,
+        width_in:
+            width,
 
-        cft: cft,
+        cft:
+            cft,
 
-        item_price: itemPrice
+        item_price:
+            itemPrice
+
     };
 
 
-    currentItems.push(item);
+    currentItems.push(
+        item
+    );
+
 
     renderCurrentBill();
 
@@ -607,7 +1698,9 @@ function calculation() {
 
     widthInput.value = "";
 
+
     updateSelectedWood();
+
 }
 
 
@@ -627,6 +1720,11 @@ function renderCurrentBill() {
             "total"
         );
 
+    const totalCFTElement =
+        document.getElementById(
+            "total-cft"
+        );
+
 
     if (!body) return;
 
@@ -634,15 +1732,23 @@ function renderCurrentBill() {
     body.innerHTML = "";
 
 
-    let total = 0;
+    let totalPrice = 0;
+
+    let totalCFT = 0;
 
 
     currentItems.forEach(
         function (item, index) {
 
-            total +=
+            totalPrice +=
                 Number(
                     item.item_price
+                );
+
+
+            totalCFT +=
+                Number(
+                    item.cft
                 );
 
 
@@ -655,7 +1761,9 @@ function renderCurrentBill() {
             row.innerHTML = `
 
                 <td>
-                    ${escapeHTML(item.wood_type)}
+                    ${escapeHTML(
+                        item.wood_type
+                    )}
                 </td>
 
                 <td>
@@ -677,7 +1785,8 @@ function renderCurrentBill() {
                 </td>
 
                 <td>
-                    LKR ${Number(
+                    LKR
+                    ${Number(
                         item.item_price
                     ).toFixed(2)}
                 </td>
@@ -693,10 +1802,14 @@ function renderCurrentBill() {
                     </button>
 
                 </td>
+
             `;
 
 
-            body.appendChild(row);
+            body.appendChild(
+                row
+            );
+
         }
     );
 
@@ -705,7 +1818,17 @@ function renderCurrentBill() {
 
         totalElement.textContent =
             "LKR " +
-            total.toFixed(2);
+            totalPrice.toFixed(2);
+
+    }
+
+
+    if (totalCFTElement) {
+
+        totalCFTElement.textContent =
+            totalCFT.toFixed(3) +
+            " CFT";
+
     }
 
 
@@ -726,6 +1849,7 @@ function renderCurrentBill() {
             currentItems.length > 0
                 ? "block"
                 : "none";
+
     }
 
 
@@ -733,7 +1857,9 @@ function renderCurrentBill() {
 
         savedButton.style.display =
             "block";
+
     }
+
 }
 
 
@@ -749,6 +1875,7 @@ function removeCurrentItem(index) {
     );
 
     renderCurrentBill();
+
 }
 
 
@@ -765,6 +1892,7 @@ function saveBill() {
         );
 
         return;
+
     }
 
 
@@ -775,6 +1903,7 @@ function saveBill() {
         );
 
         return;
+
     }
 
 
@@ -796,12 +1925,19 @@ function saveBill() {
             : null;
 
 
+    const t =
+        translations[
+            currentLanguage
+        ];
+
+
     if (title) {
 
         title.textContent =
             editingBillId
                 ? "Update your bill"
                 : "Give your bill a name";
+
     }
 
 
@@ -809,8 +1945,9 @@ function saveBill() {
 
         saveButton.textContent =
             editingBillId
-                ? "Update Bill"
-                : "Save Bill";
+                ? t.updateBill
+                : t.saveBill;
+
     }
 
 
@@ -819,7 +1956,9 @@ function saveBill() {
         modal.classList.add(
             "active"
         );
+
     }
+
 }
 
 
@@ -836,6 +1975,7 @@ async function confirmSaveBill() {
         );
 
         return;
+
     }
 
 
@@ -846,6 +1986,7 @@ async function confirmSaveBill() {
         );
 
         return;
+
     }
 
 
@@ -868,6 +2009,7 @@ async function confirmSaveBill() {
         );
 
         return;
+
     }
 
 
@@ -881,6 +2023,7 @@ async function confirmSaveBill() {
                         item.item_price
                     )
                 );
+
             },
             0
         );
@@ -896,9 +2039,11 @@ async function confirmSaveBill() {
                 billName,
                 total
             );
+
         },
         "save"
     );
+
 }
 
 
@@ -918,7 +2063,7 @@ async function saveBillToDatabase(
 
 
         // ==================================================
-        // UPDATE EXISTING BILL
+        // UPDATE
         // ==================================================
 
         if (editingBillId) {
@@ -929,8 +2074,11 @@ async function saveBillToDatabase(
                 await supabaseClient
                     .from("bills")
                     .update({
-                        bill_name: billName,
-                        total: total
+                        bill_name:
+                            billName,
+
+                        total:
+                            total
                     })
                     .eq(
                         "id",
@@ -947,12 +2095,13 @@ async function saveBillToDatabase(
             }
 
 
-            // Delete old items
             const {
                 error: deleteError
             } =
                 await supabaseClient
-                    .from("wood_calculations")
+                    .from(
+                        "wood_calculations"
+                    )
                     .delete()
                     .eq(
                         "bill_id",
@@ -972,7 +2121,7 @@ async function saveBillToDatabase(
 
 
         // ==================================================
-        // CREATE NEW BILL
+        // CREATE
         // ==================================================
 
         else {
@@ -1006,11 +2155,12 @@ async function saveBillToDatabase(
 
             billId =
                 data.id;
+
         }
 
 
         // ==================================================
-        // INSERT BILL ITEMS
+        // ITEMS
         // ==================================================
 
         const rows =
@@ -1042,7 +2192,9 @@ async function saveBillToDatabase(
 
                         item_price:
                             item.item_price
+
                     };
+
                 }
             );
 
@@ -1051,7 +2203,9 @@ async function saveBillToDatabase(
             error: itemError
         } =
             await supabaseClient
-                .from("wood_calculations")
+                .from(
+                    "wood_calculations"
+                )
                 .insert(rows);
 
 
@@ -1067,7 +2221,9 @@ async function saveBillToDatabase(
         );
 
 
-        editingBillId = null;
+        editingBillId =
+            null;
+
 
         startNewBill();
 
@@ -1084,7 +2240,9 @@ async function saveBillToDatabase(
             "Could not save the bill.\n\n" +
             error.message
         );
+
     }
+
 }
 
 
@@ -1099,12 +2257,15 @@ function closeSaveModal() {
             "save-modal"
         );
 
+
     if (modal) {
 
         modal.classList.remove(
             "active"
         );
+
     }
+
 }
 
 
@@ -1159,6 +2320,7 @@ function startNewBill() {
     renderCurrentBill();
 
     updateSelectedWood();
+
 }
 
 
@@ -1175,6 +2337,7 @@ async function showSavedBills() {
         );
 
         return;
+
     }
 
 
@@ -1201,6 +2364,7 @@ async function showSavedBills() {
         modal.classList.add(
             "active"
         );
+
     }
 
 
@@ -1246,6 +2410,7 @@ async function showSavedBills() {
                 `;
 
             return;
+
         }
 
 
@@ -1291,9 +2456,7 @@ async function showSavedBills() {
                     </div>
 
 
-                    <div
-                        class="saved-bill-actions"
-                    >
+                    <div class="saved-bill-actions">
 
                         <button
                             type="button"
@@ -1325,10 +2488,14 @@ async function showSavedBills() {
                         </button>
 
                     </div>
+
                 `;
 
 
-                list.appendChild(card);
+                list.appendChild(
+                    card
+                );
+
             }
         );
 
@@ -1349,7 +2516,9 @@ async function showSavedBills() {
                 )}
             </p>
             `;
+
     }
+
 }
 
 
@@ -1364,12 +2533,15 @@ function closeSavedBills() {
             "saved-modal"
         );
 
+
     if (modal) {
 
         modal.classList.remove(
             "active"
         );
+
     }
+
 }
 
 
@@ -1414,7 +2586,9 @@ async function openSavedBill(
             error: itemError
         } =
             await supabaseClient
-                .from("wood_calculations")
+                .from(
+                    "wood_calculations"
+                )
                 .select("*")
                 .eq(
                     "bill_id",
@@ -1451,7 +2625,9 @@ async function openSavedBill(
             "Could not open bill.\n\n" +
             error.message
         );
+
     }
+
 }
 
 
@@ -1480,19 +2656,27 @@ function renderViewBill(
         );
 
 
-    if (!modal || !content)
+    if (
+        !modal ||
+        !content
+    ) {
         return;
+    }
 
 
     if (title) {
 
         title.textContent =
             bill.bill_name;
+
     }
 
 
     modal.dataset.billId =
         bill.id;
+
+
+    let totalCFT = 0;
 
 
     let html = `
@@ -1505,22 +2689,43 @@ function renderViewBill(
 
                     <tr>
 
-                        <th>Wood</th>
-                        <th>Width</th>
-                        <th>Length</th>
-                        <th>CFT</th>
-                        <th>Price</th>
+                        <th>
+                            Wood
+                        </th>
+
+                        <th>
+                            Width
+                        </th>
+
+                        <th>
+                            Length
+                        </th>
+
+                        <th>
+                            CFT
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
 
                     </tr>
 
                 </thead>
 
                 <tbody>
+
     `;
 
 
     items.forEach(
         function (item) {
+
+            totalCFT +=
+                Number(
+                    item.cft
+                );
+
 
             html += `
 
@@ -1558,7 +2763,9 @@ function renderViewBill(
                     </td>
 
                 </tr>
+
             `;
+
         }
     );
 
@@ -1570,10 +2777,40 @@ function renderViewBill(
             </table>
 
 
+            <div class="view-summary">
+
+                <div class="view-summary-box">
+
+                    <small>
+                        Total CFT
+                    </small>
+
+                    <strong>
+                        ${totalCFT.toFixed(3)} CFT
+                    </strong>
+
+                </div>
+
+
+                <div class="view-summary-box">
+
+                    <small>
+                        Price / CFT
+                    </small>
+
+                    <strong>
+                        Multiple
+                    </strong>
+
+                </div>
+
+            </div>
+
+
             <div class="view-total">
 
                 <strong>
-                    Total:
+                    Total
                 </strong>
 
                 <span>
@@ -1586,6 +2823,7 @@ function renderViewBill(
             </div>
 
         </div>
+
     `;
 
 
@@ -1599,6 +2837,7 @@ function renderViewBill(
 
 
     closeSavedBills();
+
 }
 
 
@@ -1613,12 +2852,15 @@ function closeViewBill() {
             "view-modal"
         );
 
+
     if (modal) {
 
         modal.classList.remove(
             "active"
         );
+
     }
+
 }
 
 
@@ -1663,7 +2905,9 @@ async function editSavedBill(
             error: itemError
         } =
             await supabaseClient
-                .from("wood_calculations")
+                .from(
+                    "wood_calculations"
+                )
                 .select("*")
                 .eq(
                     "bill_id",
@@ -1727,7 +2971,9 @@ async function editSavedBill(
                             Number(
                                 item.item_price
                             )
+
                     };
+
                 }
             );
 
@@ -1742,15 +2988,16 @@ async function editSavedBill(
 
             billName.value =
                 bill.bill_name;
+
         }
 
 
         renderCurrentBill();
 
+
         closeSavedBills();
 
 
-        // Open save modal for update
         saveBill();
 
     }
@@ -1762,7 +3009,9 @@ async function editSavedBill(
             "Could not edit bill.\n\n" +
             error.message
         );
+
     }
+
 }
 
 
@@ -1783,18 +3032,18 @@ async function deleteSavedBill(
         );
 
 
-    if (!confirmed)
-        return;
+    if (!confirmed) return;
 
 
     try {
 
-        // Delete items first
         const {
             error: itemError
         } =
             await supabaseClient
-                .from("wood_calculations")
+                .from(
+                    "wood_calculations"
+                )
                 .delete()
                 .eq(
                     "bill_id",
@@ -1811,7 +3060,6 @@ async function deleteSavedBill(
         }
 
 
-        // Then delete main bill
         const {
             error: billError
         } =
@@ -1849,7 +3097,9 @@ async function deleteSavedBill(
             "Could not delete bill.\n\n" +
             error.message
         );
+
     }
+
 }
 
 
@@ -1876,7 +3126,9 @@ function openDownloadModal(
         modal.classList.add(
             "active"
         );
+
     }
+
 }
 
 
@@ -1902,14 +3154,20 @@ function openDownloadModalFromView() {
         );
 
         return;
+
     }
 
 
     openDownloadModal(
         billId
     );
+
 }
 
+
+// ======================================================
+// CLOSE DOWNLOAD MODAL
+// ======================================================
 
 function closeDownloadModal() {
 
@@ -1924,16 +3182,18 @@ function closeDownloadModal() {
         modal.classList.remove(
             "active"
         );
+
     }
 
 
     downloadBillId =
         null;
+
 }
 
 
 // ======================================================
-// DOWNLOAD SAVED BILL
+// DOWNLOAD
 // ======================================================
 
 function downloadSavedBill(
@@ -1947,6 +3207,7 @@ function downloadSavedBill(
         );
 
         return;
+
     }
 
 
@@ -1969,6 +3230,7 @@ function downloadSavedBill(
         );
 
         return;
+
     }
 
 
@@ -1987,9 +3249,11 @@ function downloadSavedBill(
                 businessName,
                 format
             );
+
         },
         "download"
     );
+
 }
 
 
@@ -2036,7 +3300,9 @@ async function generateBillDownload(
             error: itemError
         } =
             await supabaseClient
-                .from("wood_calculations")
+                .from(
+                    "wood_calculations"
+                )
                 .select("*")
                 .eq(
                     "bill_id",
@@ -2059,6 +3325,21 @@ async function generateBillDownload(
         }
 
 
+        let totalCFT = 0;
+
+
+        (items || []).forEach(
+            function (item) {
+
+                totalCFT +=
+                    Number(
+                        item.cft
+                    );
+
+            }
+        );
+
+
         documentElement =
             document.createElement(
                 "div"
@@ -2077,17 +3358,8 @@ async function generateBillDownload(
         documentElement.style.width =
             "794px";
 
-        documentElement.style.padding =
-            "40px";
-
         documentElement.style.background =
             "white";
-
-        documentElement.style.color =
-            "black";
-
-        documentElement.style.fontFamily =
-            "Arial, sans-serif";
 
 
         let rows = "";
@@ -2143,145 +3415,187 @@ async function generateBillDownload(
                         </td>
 
                     </tr>
+
                 `;
+
             }
         );
 
 
         documentElement.innerHTML = `
 
-            <div
-                style="
-                    text-align:center;
-                    margin-bottom:30px;
-                "
-            >
+            <div class="download-document">
 
-                <h1>
-                    ${escapeHTML(
-                        businessName
-                    )}
-                </h1>
+                <div class="download-header">
 
-                <h2>
-                    ${escapeHTML(
-                        bill.bill_name
-                    )}
-                </h2>
+                    <div class="download-brand">
 
-                <p>
-                    ${formatDate(
-                        bill.created_at
-                    )}
-                </p>
+                        <img
+                            class="download-logo"
+                            src="logo.png"
+                            alt="Logo"
+                        >
+
+                        <div>
+
+                            <h1>
+                                Wood Calculator
+                            </h1>
+
+                            <p>
+                                Professional Wood Measurement & Billing
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="download-meta">
+
+                        <span class="bill-label">
+                            BILL
+                        </span>
+
+                        <h2>
+                            ${escapeHTML(
+                                bill.bill_name
+                            )}
+                        </h2>
+
+                        <p>
+                            ${formatDate(
+                                bill.created_at
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="download-title">
+
+                    <h3>
+                        ${escapeHTML(
+                            businessName
+                        )}
+                    </h3>
+
+                    <p>
+                        Wood calculation and billing statement
+                    </p>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Wood
+                            </th>
+
+                            <th>
+                                Width (in)
+                            </th>
+
+                            <th>
+                                Length (ft)
+                            </th>
+
+                            <th>
+                                CFT
+                            </th>
+
+                            <th>
+                                Price / CFT
+                            </th>
+
+                            <th>
+                                Item Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${rows}
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="download-summary">
+
+                    <div class="download-summary-box">
+
+                        <span>
+                            Total CFT
+                        </span>
+
+                        <strong>
+                            ${totalCFT.toFixed(3)} CFT
+                        </strong>
+
+                    </div>
+
+
+                    <div class="download-summary-box">
+
+                        <span>
+                            Items
+                        </span>
+
+                        <strong>
+                            ${(items || []).length}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="download-grand-total">
+
+                    <span>
+                        Grand Total
+                    </span>
+
+                    <strong>
+                        LKR
+                        ${Number(
+                            bill.total
+                        ).toFixed(2)}
+                    </strong>
+
+                </div>
+
+
+                <div class="download-footer">
+
+                    <span>
+                        Thank you for your business.
+                    </span>
+
+                    <span>
+                        Wood Calculator
+                    </span>
+
+                </div>
 
             </div>
 
-
-            <table
-                style="
-                    width:100%;
-                    border-collapse:collapse;
-                "
-            >
-
-                <thead>
-
-                    <tr>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            #
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            Wood
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            Width
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            Length
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            CFT
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            Price/CFT
-                        </th>
-
-                        <th
-                            style="
-                                padding:10px;
-                                border:1px solid #ccc;
-                            "
-                        >
-                            Price
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    ${rows}
-
-                </tbody>
-
-            </table>
-
-
-            <div
-                style="
-                    text-align:right;
-                    font-size:22px;
-                    font-weight:bold;
-                    margin-top:25px;
-                "
-            >
-
-                Total:
-                LKR
-                ${Number(
-                    bill.total
-                ).toFixed(2)}
-
-            </div>
         `;
 
 
@@ -2298,6 +3612,7 @@ async function generateBillDownload(
             throw new Error(
                 "html2canvas library is not loaded."
             );
+
         }
 
 
@@ -2306,6 +3621,9 @@ async function generateBillDownload(
                 documentElement,
                 {
                     scale: 2,
+
+                    useCORS: true,
+
                     backgroundColor:
                         "#ffffff"
                 }
@@ -2344,7 +3662,6 @@ async function generateBillDownload(
 
             link.click();
 
-
             link.remove();
 
         }
@@ -2364,6 +3681,7 @@ async function generateBillDownload(
                 throw new Error(
                     "jsPDF library is not loaded."
                 );
+
             }
 
 
@@ -2395,7 +3713,7 @@ async function generateBillDownload(
                     .getHeight();
 
 
-            const margin = 10;
+            const margin = 8;
 
 
             const imageWidth =
@@ -2458,6 +3776,7 @@ async function generateBillDownload(
                 heightLeft -=
                     pageHeight -
                     margin * 2;
+
             }
 
 
@@ -2467,6 +3786,7 @@ async function generateBillDownload(
                 ) +
                 ".pdf"
             );
+
         }
 
     }
@@ -2489,8 +3809,11 @@ async function generateBillDownload(
         if (documentElement) {
 
             documentElement.remove();
+
         }
+
     }
+
 }
 
 
@@ -2522,7 +3845,8 @@ function requestAdThen(
     if (message) {
 
         if (
-            actionType === "save"
+            actionType ===
+            "save"
         ) {
 
             message.textContent =
@@ -2533,7 +3857,9 @@ function requestAdThen(
 
             message.textContent =
                 "Watch the advertisement before downloading your bill.";
+
         }
+
     }
 
 
@@ -2542,7 +3868,9 @@ function requestAdThen(
         modal.classList.add(
             "active"
         );
+
     }
+
 }
 
 
@@ -2563,6 +3891,7 @@ function completeAdGate() {
         modal.classList.remove(
             "active"
         );
+
     }
 
 
@@ -2580,7 +3909,9 @@ function completeAdGate() {
 
 
         action();
+
     }
+
 }
 
 
@@ -2605,7 +3936,9 @@ function cancelAdGate() {
         modal.classList.remove(
             "active"
         );
+
     }
+
 }
 
 
@@ -2620,7 +3953,6 @@ function show_numpad() {
             "num-pad"
         );
 
-
     const button =
         document.getElementById(
             "show_num"
@@ -2633,6 +3965,7 @@ function show_numpad() {
             document.getElementById(
                 "price"
             );
+
     }
 
 
@@ -2641,6 +3974,7 @@ function show_numpad() {
         numpad.classList.add(
             "active"
         );
+
     }
 
 
@@ -2649,13 +3983,16 @@ function show_numpad() {
         button.classList.add(
             "active"
         );
+
     }
 
 
     if (selectedInput) {
 
         selectedInput.focus();
+
     }
+
 }
 
 
@@ -2665,7 +4002,6 @@ function hide_numpad() {
         document.getElementById(
             "num-pad"
         );
-
 
     const button =
         document.getElementById(
@@ -2678,6 +4014,7 @@ function hide_numpad() {
         numpad.classList.remove(
             "active"
         );
+
     }
 
 
@@ -2686,7 +4023,9 @@ function hide_numpad() {
         button.classList.remove(
             "active"
         );
+
     }
+
 }
 
 
@@ -2698,11 +4037,11 @@ function numPress(number) {
             document.getElementById(
                 "price"
             );
+
     }
 
 
-    if (!selectedInput)
-        return;
+    if (!selectedInput) return;
 
 
     selectedInput.value +=
@@ -2720,13 +4059,13 @@ function numPress(number) {
 
 
     selectedInput.focus();
+
 }
 
 
 function clearInput() {
 
-    if (!selectedInput)
-        return;
+    if (!selectedInput) return;
 
 
     selectedInput.value = "";
@@ -2743,6 +4082,7 @@ function clearInput() {
             }
         )
     );
+
 }
 
 
@@ -2761,6 +4101,7 @@ function nextInput() {
         document.getElementById(
             "width"
         )
+
     ];
 
 
@@ -2788,18 +4129,19 @@ function nextInput() {
     else {
 
         hide_numpad();
+
     }
+
 }
 
 
 // ======================================================
-// DATE FORMAT
+// DATE
 // ======================================================
 
 function formatDate(date) {
 
-    if (!date)
-        return "";
+    if (!date) return "";
 
 
     let locale =
@@ -2807,20 +4149,24 @@ function formatDate(date) {
 
 
     if (
-        currentLanguage === "si"
+        currentLanguage ===
+        "si"
     ) {
 
         locale =
             "si-LK";
+
     }
 
 
     if (
-        currentLanguage === "ta"
+        currentLanguage ===
+        "ta"
     ) {
 
         locale =
             "ta-LK";
+
     }
 
 
@@ -2829,6 +4175,7 @@ function formatDate(date) {
     ).toLocaleString(
         locale
     );
+
 }
 
 
@@ -2849,6 +4196,7 @@ function escapeHTML(value) {
 
 
     return div.innerHTML;
+
 }
 
 
@@ -2871,11 +4219,12 @@ function sanitizeFileName(name) {
             0,
             100
         );
+
 }
 
 
 // ======================================================
-// CLOSE MODALS WHEN CLICKING BACKGROUND
+// CLOSE MODALS ON BACKGROUND
 // ======================================================
 
 document.addEventListener(
@@ -2914,6 +4263,7 @@ document.addEventListener(
         ) {
 
             closeSaveModal();
+
         }
 
 
@@ -2923,6 +4273,7 @@ document.addEventListener(
         ) {
 
             closeSavedBills();
+
         }
 
 
@@ -2932,6 +4283,7 @@ document.addEventListener(
         ) {
 
             closeViewBill();
+
         }
 
 
@@ -2941,6 +4293,7 @@ document.addEventListener(
         ) {
 
             closeDownloadModal();
+
         }
 
 
@@ -2950,6 +4303,7 @@ document.addEventListener(
         ) {
 
             cancelAdGate();
+
         }
 
     }
@@ -2957,7 +4311,7 @@ document.addEventListener(
 
 
 // ======================================================
-// UPDATE WOOD PRICE DISPLAY
+// PRICE INPUT
 // ======================================================
 
 document.addEventListener(
@@ -2971,13 +4325,15 @@ document.addEventListener(
         ) {
 
             updateSelectedWood();
+
         }
+
     }
 );
 
 
 // ======================================================
-// WOOD SELECT CHANGE
+// WOOD SELECT
 // ======================================================
 
 document.addEventListener(
@@ -2991,22 +4347,8 @@ document.addEventListener(
         ) {
 
             updateSelectedWood();
+
         }
+
     }
 );
-
-const instructions = document.getElementById("instructions");
-const closeInstructions = document.getElementById("closeInstructions");
-
-// Check if the user has already seen the instructions
-if (localStorage.getItem("instructionsSeen") === "true") {
-    instructions.style.display = "none";
-}
-
-// Close instructions
-closeInstructions.addEventListener("click", () => {
-    instructions.style.display = "none";
-
-    // Remember that this user has seen it
-    localStorage.setItem("instructionsSeen", "true");
-});
