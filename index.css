@@ -1,5 +1,4 @@
 :root {
-
     --primary: #04382C;
     --primary-hover: #07513F;
     --primary-light: #0B6B55;
@@ -19,155 +18,92 @@
     --border-green: #D6E9E2;
 
     --white: #FFFFFF;
-
 }
-
 
 * {
     box-sizing: border-box;
 }
 
-
 html,
 body {
-
     margin: 0;
     padding: 0;
-
     width: 100%;
     min-height: 100%;
-
 }
-
 
 body {
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
     background: var(--primary);
-
     color: var(--text);
-
     overflow-x: hidden;
-
 }
-
 
 /* =========================
    HEADER
 ========================= */
 
 header {
-
     width: 100%;
     height: 58px;
 
     display: flex;
-
     justify-content: center;
     align-items: center;
 
     background: var(--primary);
-
 }
-
 
 header img {
-
     width: 68px;
     height: 68px;
-
     object-fit: contain;
-
     display: block;
-
 }
-
 
 /* =========================
    MAIN
 ========================= */
 
 main {
-
     width: 100%;
+    min-height: calc(100vh - 58px);
 
-    min-height:
-        calc(100vh - 58px);
-
-    padding:
-        14px
-        15px
-        100px;
+    padding: 14px 15px 100px;
 
     background: var(--bg);
 
-    border-radius:
-        26px
-        26px
-        0
-        0;
-
+    border-radius: 26px 26px 0 0;
 }
 
-
 .container {
-
-    width:
-        min(
-            900px,
-            100%
-        );
-
+    width: min(900px, 100%);
     margin: auto;
 
     display: flex;
-
     flex-direction: column;
-
     gap: 14px;
-
 }
-
 
 /* =========================
    WOOD CARD
 ========================= */
 
 .wood-card {
-
     width: 100%;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    border:
-        1px solid
-        var(--border);
-
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     overflow: hidden;
 
     box-shadow:
-        0
-        3px
-        12px
-        rgba(
-            4,
-            56,
-            44,
-            0.05
-        );
-
+        0 3px 12px rgba(4, 56, 44, 0.05);
 }
 
-
 .wood-bar-button {
-
     width: 100%;
     height: 48px;
 
@@ -178,397 +114,263 @@ main {
     background: none;
 
     cursor: pointer;
-
 }
 
-
 .wood-bar {
-
     width: 100%;
     height: 48px;
 
-    padding:
-        0
-        14px;
+    padding: 0 14px;
 
     display: flex;
-
     align-items: center;
 
     gap: 12px;
 
-    background:
-        var(--surface);
-
+    background: var(--surface);
 }
-
 
 .wood-bar:hover {
-
-    background:
-        var(--green-soft);
-
+    background: var(--green-soft);
 }
-
 
 /* =========================
    WOOD
 ========================= */
 
 .wood-info {
-
     display: flex;
-
     align-items: center;
 
     gap: 9px;
 
     min-width: 0;
-
 }
 
-
 .wood-label {
-
-    color:
-        var(--text-muted);
+    color: var(--text-muted);
 
     font-size: 9px;
-
     font-weight: 700;
 
     letter-spacing: 1px;
-
 }
 
-
 #selected-wood {
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 14px;
 
     white-space: nowrap;
-
 }
 
-
 .wood-price {
-
     margin-left: auto;
 
-    color:
-        var(--green);
+    color: var(--green);
 
     font-size: 13px;
-
     font-weight: 700;
 
     white-space: nowrap;
-
 }
-
 
 #selected-price {
-
-    color:
-        var(--green);
-
+    color: var(--green);
 }
 
-
 .wood-plus {
-
     width: 25px;
     height: 25px;
 
     flex-shrink: 0;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
 
-    background:
-        var(--green-light);
+    background: var(--green-light);
 
-    color:
-        var(--green);
+    color: var(--green);
 
     border-radius: 50%;
 
     font-size: 18px;
-
 }
-
 
 /* =========================
    WOOD SETTINGS
 ========================= */
 
 .see-area {
-
     display: none;
 
     width: 100%;
 
     padding: 15px;
 
-    background:
-        var(--surface-soft);
+    background: var(--surface-soft);
 
-    border-top:
-        1px solid
-        var(--border-green);
-
+    border-top: 1px solid var(--border-green);
 }
 
+/* IMPORTANT FIX */
+.see-area.active {
+    display: block;
+}
 
 .wood-settings {
-
     width: 100%;
 
     display: flex;
-
     flex-direction: column;
 
     gap: 12px;
-
 }
 
-
 .setting {
-
     width: 100%;
 
     display: flex;
-
     flex-direction: column;
 
     gap: 6px;
-
 }
-
 
 .setting label {
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 12px;
-
     font-weight: 600;
-
 }
-
 
 .setting select,
 .setting input {
-
     width: 100%;
     height: 42px;
 
-    padding:
-        0
-        12px;
+    padding: 0 12px;
 
-    background:
-        var(--white);
+    background: var(--white);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 9px;
 
     outline: none;
 
-    color:
-        var(--text);
+    color: var(--text);
 
     font-size: 14px;
-
 }
-
 
 .setting select:focus,
 .setting input:focus {
-
-    border-color:
-        var(--primary-light);
+    border-color: var(--primary-light);
 
     box-shadow:
-        0
-        0
-        0
-        3px
-        rgba(
-            11,
-            107,
-            85,
-            0.08
-        );
-
+        0 0 0 3px rgba(11, 107, 85, 0.08);
 }
 
-
 .done-button {
-
     width: 100%;
     height: 40px;
 
     margin-top: 3px;
 
-    background:
-        var(--primary);
+    background: var(--primary);
 
-    color:
-        var(--white);
+    color: var(--white);
 
     border: 0;
 
     border-radius: 8px;
 
     font-size: 13px;
-
     font-weight: 700;
 
     cursor: pointer;
-
 }
-
 
 .done-button:hover {
-
-    background:
-        var(--primary-hover);
-
+    background: var(--primary-hover);
 }
-
 
 /* =========================
    SECTION HEADING
 ========================= */
 
 .section-heading {
-
     margin-bottom: 17px;
-
 }
 
-
 .section-heading span {
-
-    color:
-        var(--green);
+    color: var(--green);
 
     font-size: 10px;
-
     font-weight: 700;
 
     letter-spacing: 1.2px;
-
 }
-
 
 .section-heading h2 {
+    margin: 4px 0 0;
 
-    margin:
-        4px
-        0
-        0;
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 18px;
-
 }
-
 
 /* =========================
    MEASUREMENT
 ========================= */
 
 .measurement-card {
-
     width: 100%;
 
     padding: 20px;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 14px;
 
     box-shadow:
-        0
-        3px
-        12px
-        rgba(
-            4,
-            56,
-            44,
-            0.05
-        );
-
+        0 3px 12px rgba(4, 56, 44, 0.05);
 }
 
-
 .length-and-width {
-
     width: 100%;
 
     display: flex;
 
     gap: 12px;
-
 }
 
-
 .input-box {
-
     flex: 1;
 
     display: flex;
-
     flex-direction: column;
 
     gap: 7px;
-
 }
-
 
 .input-box label {
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 12px;
-
     font-weight: 600;
-
 }
-
 
 .input-box small {
-
-    color:
-        var(--text-muted);
+    color: var(--text-muted);
 
     font-weight: normal;
-
 }
 
-
 .number {
-
     width: 21px;
     height: 21px;
 
@@ -579,120 +381,77 @@ main {
     justify-content: center;
     align-items: center;
 
-    background:
-        var(--green-light);
+    background: var(--green-light);
 
-    color:
-        var(--green);
+    color: var(--green);
 
     border-radius: 50%;
 
     font-size: 10px;
-
     font-weight: 700;
-
 }
 
-
 .input-box input {
-
     width: 100%;
     height: 46px;
 
-    padding:
-        0
-        13px;
+    padding: 0 13px;
 
-    background:
-        var(--surface-soft);
+    background: var(--surface-soft);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 9px;
 
     outline: none;
 
-    color:
-        var(--text);
+    color: var(--text);
 
     font-size: 16px;
-
 }
-
 
 .input-box input:focus {
+    background: var(--white);
 
-    background:
-        var(--white);
-
-    border-color:
-        var(--primary-light);
+    border-color: var(--primary-light);
 
     box-shadow:
-        0
-        0
-        0
-        3px
-        rgba(
-            11,
-            107,
-            85,
-            0.08
-        );
-
+        0 0 0 3px rgba(11, 107, 85, 0.08);
 }
-
 
 /* =========================
    BUTTON
 ========================= */
 
 .calculate-btn {
-
     width: 100%;
     height: 48px;
 
     margin-top: 18px;
 
-    background:
-        var(--primary);
+    background: var(--primary);
 
-    color:
-        var(--white);
+    color: var(--white);
 
     border: 0;
 
     border-radius: 9px;
 
     font-size: 14px;
-
     font-weight: 700;
 
     cursor: pointer;
 
-    transition:
-        0.2s ease;
-
+    transition: 0.2s ease;
 }
-
 
 .calculate-btn:hover {
-
-    background:
-        var(--primary-hover);
-
+    background: var(--primary-hover);
 }
-
 
 .calculate-btn:active {
-
-    transform:
-        scale(0.99);
-
+    transform: scale(0.99);
 }
-
 
 /* =========================
    BILL ACTIONS
@@ -700,281 +459,186 @@ main {
 
 #save-bill-btn,
 #saved-bills-btn {
-
     display: none;
-
 }
-
 
 .bill-action {
-
     margin-top: 12px;
-
 }
-
 
 /* =========================
    TOTAL
 ========================= */
 
 .total-card {
-
     width: 100%;
 
-    padding:
-        18px
-        20px;
+    padding: 18px 20px;
 
-    background:
-        var(--primary);
+    background: var(--primary);
 
     border-radius: 14px;
 
     box-shadow:
-        0
-        5px
-        18px
-        rgba(
-            4,
-            56,
-            44,
-            0.14
-        );
-
+        0 5px 18px rgba(4, 56, 44, 0.14);
 }
 
-
 .total-label {
-
-    color:
-        #AFCBC2;
+    color: #AFCBC2;
 
     font-size: 10px;
-
     font-weight: 700;
 
     letter-spacing: 1.2px;
-
 }
-
 
 .total-card p {
+    margin: 4px 0 0;
 
-    margin:
-        4px
-        0
-        0;
-
-    color:
-        var(--white);
+    color: var(--white);
 
     font-size: 23px;
-
     font-weight: 700;
-
 }
-
 
 /* =========================
    BILL
 ========================= */
 
 .bill-card {
-
     width: 100%;
 
     padding: 20px;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 14px;
 
     box-shadow:
-        0
-        3px
-        12px
-        rgba(
-            4,
-            56,
-            44,
-            0.05
-        );
-
+        0 3px 12px rgba(4, 56, 44, 0.05);
 }
 
-
 .preview {
-
     width: 100%;
 
     overflow-x: auto;
-
 }
 
-
 .preview table {
-
     width: 100%;
-
     min-width: 450px;
 
     border-collapse: collapse;
 
-    background:
-        var(--white);
+    background: var(--white);
 
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: 9px;
-
-    overflow: hidden;
-
+    border: 1px solid var(--border);
 }
-
 
 .preview thead {
+    background: var(--primary);
 
-    background:
-        var(--primary);
-
-    color:
-        var(--white);
-
+    color: var(--white);
 }
 
-
 .preview th {
-
-    padding:
-        12px
-        8px;
+    padding: 12px 8px;
 
     font-size: 12px;
-
     font-weight: 700;
 
     border-right:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
-
+        1px solid rgba(255, 255, 255, 0.15);
 }
 
-
 .preview td {
-
-    padding:
-        11px
-        8px;
+    padding: 11px 8px;
 
     text-align: center;
 
     font-size: 13px;
 
-    border-right:
-        1px solid
-        var(--border);
-
-    border-bottom:
-        1px solid
-        var(--border);
-
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
-
 
 .preview td:last-child,
 .preview th:last-child {
-
     border-right: 0;
-
 }
-
 
 .preview tbody tr:hover {
-
-    background:
-        var(--green-soft);
-
+    background: var(--green-soft);
 }
 
+/* =========================
+   DELETE ITEM
+========================= */
+
+.delete-item-btn {
+    width: 28px;
+    height: 28px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: #FDECEC;
+
+    color: #B42318;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.delete-item-btn:hover {
+    background: #F8DADA;
+}
 
 /* =========================
    NUMPAD
 ========================= */
 
 .num-pad {
-
-    width:
-        min(
-            360px,
-            calc(100% - 30px)
-        );
+    width: min(360px, calc(100% - 30px));
 
     padding: 18px;
 
     display: none;
 
-    grid-template-columns:
-        repeat(
-            4,
-            1fr
-        );
+    grid-template-columns: repeat(4, 1fr);
 
-    grid-template-rows:
-        repeat(
-            3,
-            60px
-        );
+    grid-template-rows: repeat(3, 60px);
 
     gap: 10px;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 16px;
 
     position: fixed;
 
     left: 50%;
-
     bottom: 20px;
 
-    transform:
-        translateX(-50%);
+    transform: translateX(-50%);
 
     box-shadow:
-        0
-        10px
-        35px
-        rgba(
-            0,
-            0,
-            0,
-            0.15
-        );
+        0 10px 35px rgba(0, 0, 0, 0.15);
 
     z-index: 100;
-
 }
 
+.num-pad.active {
+    display: grid;
+}
 
 .num-pad .btn {
-
     width: 100%;
     height: 100%;
 
@@ -983,166 +647,109 @@ main {
     justify-content: center;
     align-items: center;
 
-    background:
-        var(--surface-soft);
+    background: var(--surface-soft);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 9px;
 
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 18px;
-
     font-weight: 700;
 
     cursor: pointer;
-
 }
-
 
 .num-pad .btn:hover {
-
-    background:
-        var(--green-light);
-
+    background: var(--green-light);
 }
-
 
 .num-pad .btn:active {
-
-    transform:
-        scale(0.95);
-
+    transform: scale(0.95);
 }
-
 
 .num-pad #c {
+    background: var(--primary);
 
-    background:
-        var(--primary);
-
-    color:
-        var(--white);
-
+    color: var(--white);
 }
-
 
 .num-pad #e-btn {
-
     grid-column: 4;
 
-    grid-row:
-        2 / 4;
+    grid-row: 2 / 4;
 
-    background:
-        var(--green);
+    background: var(--green);
 
-    color:
-        var(--white);
-
+    color: var(--white);
 }
-
 
 /* =========================
    NUMPAD BUTTON
 ========================= */
 
 #btn_mark {
-
     position: fixed;
 
     right: 18px;
-
     bottom: 20px;
 
     z-index: 90;
-
 }
 
-
 #show_num {
-
     width: 55px;
     height: 55px;
 
-    background:
-        var(--green);
+    background: var(--green);
 
-    color:
-        var(--white);
+    color: var(--white);
 
     border: 0;
 
     border-radius: 50%;
 
     font-size: 11px;
-
     font-weight: 700;
 
     cursor: pointer;
 
     box-shadow:
-        0
-        5px
-        15px
-        rgba(
-            22,
-            128,
-            62,
-            0.25
-        );
-
+        0 5px 15px rgba(22, 128, 62, 0.25);
 }
-
 
 /* =========================
    MODAL
 ========================= */
 
 .modal {
-
     display: none;
 
     position: fixed;
 
     inset: 0;
 
-    background:
-        rgba(
-            4,
-            56,
-            44,
-            0.55
-        );
+    background: rgba(4, 56, 44, 0.55);
 
-    backdrop-filter:
-        blur(6px);
+    backdrop-filter: blur(6px);
 
     justify-content: center;
-
     align-items: center;
 
     padding: 18px;
 
     z-index: 200;
-
 }
 
+.modal.active {
+    display: flex;
+}
 
 .modal-box {
+    width: min(440px, 100%);
 
-    width:
-        min(
-            440px,
-            100%
-        );
-
-    max-height:
-        90vh;
+    max-height: 90vh;
 
     overflow-y: auto;
 
@@ -1150,35 +757,20 @@ main {
 
     padding: 26px;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 18px;
 
     box-shadow:
-        0
-        20px
-        60px
-        rgba(
-            0,
-            0,
-            0,
-            0.18
-        );
-
+        0 20px 60px rgba(0, 0, 0, 0.18);
 }
 
-
 .close-modal {
-
     position: absolute;
 
     top: 14px;
-
     right: 14px;
 
     width: 34px;
@@ -1188,105 +780,65 @@ main {
 
     border-radius: 50%;
 
-    background:
-        var(--green-light);
+    background: var(--green-light);
 
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 23px;
 
     cursor: pointer;
-
 }
 
-
 .modal-small {
-
     display: block;
 
-    color:
-        var(--green);
+    color: var(--green);
 
     font-size: 10px;
-
     font-weight: 700;
 
     letter-spacing: 1.2px;
 
     margin-bottom: 5px;
-
 }
-
 
 .modal-box h2 {
+    margin: 0 0 18px;
 
-    margin:
-        0
-        0
-        18px;
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 21px;
-
 }
 
-
 .modal-box input {
-
     width: 100%;
     height: 46px;
 
-    padding:
-        0
-        13px;
+    padding: 0 13px;
 
-    border:
-        1px solid
-        var(--border);
+    border: 1px solid var(--border);
 
     border-radius: 9px;
 
     outline: none;
 
-    color:
-        var(--text);
+    color: var(--text);
 
-    background:
-        var(--surface-soft);
+    background: var(--surface-soft);
 
     font-size: 14px;
-
 }
-
 
 .modal-box input:focus {
+    background: var(--white);
 
-    background:
-        var(--white);
-
-    border-color:
-        var(--primary-light);
+    border-color: var(--primary-light);
 
     box-shadow:
-        0
-        0
-        0
-        3px
-        rgba(
-            11,
-            107,
-            85,
-            0.08
-        );
-
+        0 0 0 3px rgba(11, 107, 85, 0.08);
 }
 
-
 .modal-action {
-
     width: 100%;
     height: 46px;
 
@@ -1296,220 +848,456 @@ main {
 
     border-radius: 9px;
 
-    background:
-        var(--primary);
+    background: var(--primary);
 
-    color:
-        var(--white);
+    color: var(--white);
 
     font-size: 14px;
-
     font-weight: 700;
 
     cursor: pointer;
-
 }
-
 
 .modal-action:hover {
-
-    background:
-        var(--primary-hover);
-
+    background: var(--primary-hover);
 }
 
-
 .modal-action:disabled {
-
     opacity: 0.6;
 
     cursor: not-allowed;
-
 }
-
 
 /* =========================
    SAVED BILLS
 ========================= */
 
 .saved-box {
-
-    width:
-        min(
-            600px,
-            100%
-        );
-
+    width: min(600px, 100%);
 }
 
-
 #saved-bills-list {
-
     display: flex;
 
     flex-direction: column;
 
     gap: 10px;
-
 }
 
-
-.saved-bill-item {
-
+.saved-bill-card {
     width: 100%;
 
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
     gap: 15px;
 
     padding: 15px;
 
-    text-align: left;
+    border: 1px solid var(--border);
 
-    border:
-        1px solid
-        var(--border);
-
-    background:
-        var(--surface-soft);
+    background: var(--surface-soft);
 
     border-radius: 11px;
+}
 
-    color:
-        var(--text);
+.saved-bill-info {
+    flex: 1;
+
+    min-width: 0;
 
     cursor: pointer;
-
-    transition:
-        0.2s ease;
-
 }
 
+.saved-bill-info h3 {
+    margin: 0;
 
-.saved-bill-item:hover {
-
-    border-color:
-        var(--border-green);
-
-    background:
-        var(--green-light);
-
-    transform:
-        translateY(-1px);
-
-}
-
-
-.saved-bill-item strong {
-
-    display: block;
-
-    color:
-        var(--primary);
+    color: var(--primary);
 
     font-size: 14px;
-
 }
 
+.saved-bill-info p {
+    margin: 4px 0;
 
-.saved-bill-item small {
-
-    display: block;
-
-    margin-top: 4px;
-
-    color:
-        var(--text-muted);
-
-    font-size: 11px;
-
-}
-
-
-.saved-bill-item > span {
-
-    color:
-        var(--green);
+    color: var(--green);
 
     font-size: 13px;
-
     font-weight: 700;
-
-    white-space: nowrap;
-
 }
 
+.saved-bill-info small {
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+.saved-bill-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+}
+
+.icon-action {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-green);
+
+    border-radius: 7px;
+
+    background: var(--green-light);
+
+    color: var(--primary);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.icon-action:hover {
+    background: var(--green);
+
+    color: var(--white);
+}
+
+.delete-action:hover {
+    background: #B42318;
+}
 
 .empty-bills {
-
     padding: 25px 10px;
 
     text-align: center;
 
-    color:
-        var(--text-muted);
+    color: var(--text-muted);
 
     font-size: 13px;
-
 }
 
-
 /* =========================
-   SAVED BILL TOTAL
+   VIEW BILL
 ========================= */
 
-.saved-total {
+.view-title-row {
+    display: flex;
 
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    padding-right: 40px;
+}
+
+.view-title-row h2 {
+    flex: 1;
+
+    min-width: 0;
+
+    margin: 0;
+
+    overflow-wrap: anywhere;
+}
+
+.view-bill-table {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.view-bill-table table {
+    width: 100%;
+
+    min-width: 450px;
+
+    border-collapse: collapse;
+}
+
+.view-bill-table th {
+    padding: 10px;
+
+    background: var(--primary);
+
+    color: var(--white);
+
+    font-size: 12px;
+}
+
+.view-bill-table td {
+    padding: 10px;
+
+    border: 1px solid var(--border);
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+.view-total {
     display: flex;
 
     justify-content: space-between;
 
     align-items: center;
 
-    gap: 15px;
-
     margin-top: 15px;
 
     padding: 15px;
 
-    background:
-        var(--primary);
+    background: var(--primary);
 
-    border-radius: 11px;
+    color: var(--white);
 
-    color:
-        var(--white);
-
+    border-radius: 10px;
 }
 
+.view-total span {
+    font-weight: 700;
+}
 
-.saved-total span {
+/* =========================
+   DOWNLOAD
+========================= */
 
-    color:
-        #AFCBC2;
+.download-format-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 12px;
+}
+
+.download-format {
+    min-height: 82px;
+
+    padding: 12px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: var(--surface-soft);
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.download-format:hover {
+    background: var(--green-light);
+
+    border-color: var(--border-green);
+}
+
+.format-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: var(--green);
+
+    color: var(--white);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+/* =========================
+   ADS
+========================= */
+
+.ad-slot {
+    width: 100%;
+
+    min-height: 72px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px dashed var(--border-green);
+
+    border-radius: 12px;
+
+    background: var(--surface);
+
+    color: var(--text-muted);
 
     font-size: 10px;
 
-    font-weight: 700;
+    letter-spacing: 0.8px;
 
-    letter-spacing: 1px;
+    text-transform: uppercase;
 
+    overflow: hidden;
 }
 
-
-.saved-total strong {
-
-    color:
-        var(--white);
-
-    font-size: 17px;
-
+.home-ad {
+    max-width: 900px;
 }
 
+.saved-ad {
+    min-height: 60px;
+
+    margin: 0 0 15px;
+}
+
+/* =========================
+   LANGUAGE
+========================= */
+
+.language-select {
+    position: absolute;
+
+    right: 14px;
+    top: 13px;
+
+    height: 32px;
+
+    padding: 0 8px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    border-radius: 7px;
+
+    background: var(--primary-hover);
+
+    color: var(--white);
+
+    font-size: 11px;
+
+    outline: none;
+}
+
+/* =========================
+   DOWNLOAD DOCUMENT
+========================= */
+
+.download-document {
+    width: 900px;
+
+    max-width: 100%;
+
+    padding: 35px;
+
+    background: #ffffff;
+
+    color: #15171A;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.download-document h1 {
+    margin: 0;
+
+    color: #04382C;
+
+    font-size: 25px;
+}
+
+.download-document .business-name {
+    margin: 6px 0 3px;
+
+    color: #16803E;
+
+    font-size: 18px;
+}
+
+.download-document .download-date {
+    margin: 0 0 25px;
+
+    color: #737A7C;
+
+    font-size: 12px;
+}
+
+.download-document table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.download-document th {
+    padding: 11px 8px;
+
+    background: #04382C;
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+.download-document td {
+    padding: 10px 8px;
+
+    border: 1px solid #E1E3E3;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+.download-document .download-total {
+    margin-top: 18px;
+
+    padding: 15px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    background: #04382C;
+
+    color: #ffffff;
+
+    border-radius: 8px;
+}
+
+.download-document .download-total strong {
+    font-size: 16px;
+}
 
 /* =========================
    MOBILE
@@ -1518,97 +1306,103 @@ main {
 @media (max-width: 600px) {
 
     header {
-
         height: 48px;
-
     }
-
 
     header img {
-
         width: 68px;
         height: 68px;
-
     }
-
 
     main {
+        min-height: calc(100vh - 48px);
 
-        min-height:
-            calc(100vh - 48px);
+        padding: 12px 10px 90px;
 
-        padding:
-            12px
-            10px
-            90px;
-
-        border-radius:
-            22px
-            22px
-            0
-            0;
-
+        border-radius: 22px 22px 0 0;
     }
-
 
     .measurement-card,
     .bill-card {
-
         padding: 17px;
-
     }
-
 
     .wood-bar,
     .wood-bar-button {
-
         height: 46px;
-
     }
-
 
     .length-and-width {
-
         gap: 9px;
-
     }
-
 
     .preview table {
-
         min-width: 450px;
-
     }
 
-
     #btn_mark {
-
         right: 14px;
 
         bottom: 18px;
-
     }
-
 
     #show_num {
-
         width: 54px;
         height: 54px;
-
     }
-
 
     .modal-box {
-
         padding: 22px;
-
     }
 
+    .language-select {
+        right: 8px;
 
-    .saved-bill-item {
+        top: 8px;
 
-        padding: 13px;
+        height: 29px;
 
+        font-size: 10px;
     }
 
+    .download-format-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .saved-bill-card {
+        align-items: flex-start;
+    }
+
+    .saved-bill-actions {
+        flex-wrap: wrap;
+
+        justify-content: flex-end;
+    }
+
+    .download-document {
+        padding: 22px;
+    }
+}
+
+.instructions {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.instructions-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 90%;
+}
+
+.instructions-box button {
+    padding: 10px 20px;
+    cursor: pointer;
 }

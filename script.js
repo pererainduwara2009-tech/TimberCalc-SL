@@ -1,6 +1,10 @@
-/* ==================================================
-   SUPABASE
-================================================== */
+// ======================================================
+// WOOD CALCULATOR
+// ======================================================
+
+// ======================================================
+// SUPABASE
+// ======================================================
 
 const SUPABASE_URL =
     "https://jythcpntirluezgbltjv.supabase.co";
@@ -15,505 +19,555 @@ const supabaseClient =
     );
 
 
-/* ==================================================
-   CURRENT USER
-================================================== */
+// ======================================================
+// GLOBAL VARIABLES
+// ======================================================
 
 let currentUser = null;
-
-
-/* ==================================================
-   ELEMENTS
-================================================== */
-
-// Wood
-
-const see_area =
-    document.getElementById("see-area");
-
-const done_btn =
-    document.getElementById("done");
-
-const woodType =
-    document.getElementById("wood-type");
-
-const priceInput =
-    document.getElementById("price");
-
-const selectedWood =
-    document.getElementById("selected-wood");
-
-const selectedPrice =
-    document.getElementById("selected-price");
-
-
-// Bill
-
-const bill_body =
-    document.getElementById("bill-body");
-
-const see_total =
-    document.getElementById("total");
-
-const saveBillButton =
-    document.getElementById("save-bill-btn");
-
-const savedBillsButton =
-    document.getElementById("saved-bills-btn");
-
-
-// Numpad
-
-const num_pad =
-    document.getElementById("num-pad");
-
-const no_btn =
-    document.getElementById("btn_mark");
-
-const lengthInput =
-    document.getElementById("length");
-
-const widthInput =
-    document.getElementById("width");
-
-
-/* ==================================================
-   BILL DATA
-================================================== */
-
-let total = 0;
-
 let currentItems = [];
+let editingBillId = null;
+let selectedInput = null;
+let downloadBillId = null;
+let pendingAdAction = null;
+let currentLanguage = "en";
 
 
-/* ==================================================
-   START GUEST SESSION
-================================================== */
+// ======================================================
+// TRANSLATIONS
+// ======================================================
 
-async function startGuestSession() {
+const translations = {
 
-    try {
+    en: {
+        wood: "WOOD",
+        woodType: "Wood Type",
+        price: "Price / CFT",
+        measurement: "MEASUREMENT",
+        enterDimensions: "Enter Dimensions",
+        calculate: "Calculate",
+        total: "TOTAL",
+        bill: "BILL",
+        billSummary: "Bill Summary",
+        saveBill: "Save Bill",
+        updateBill: "Update Bill",
+        savedBills: "Saved Bills",
+        yourBills: "YOUR BILLS",
+        billDetails: "BILL DETAILS",
+        downloadBill: "DOWNLOAD BILL",
+        businessName: "Business name",
+        downloadPDF: "Download PDF",
+        saveImage: "Save Image",
+        advertisement: "Advertisement"
+    },
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.getSession();
+    si: {
+        wood: "දැව",
+        woodType: "දැව වර්ගය",
+        price: "CFT මිල",
+        measurement: "මිනුම්",
+        enterDimensions: "මාන ඇතුළත් කරන්න",
+        calculate: "ගණනය කරන්න",
+        total: "මුළු එකතුව",
+        bill: "බිල්පත",
+        billSummary: "බිල්පත් සාරාංශය",
+        saveBill: "බිල්පත සුරකින්න",
+        updateBill: "බිල්පත යාවත්කාලීන කරන්න",
+        savedBills: "සුරකින ලද බිල්පත්",
+        yourBills: "ඔබගේ බිල්පත්",
+        billDetails: "බිල්පත් විස්තර",
+        downloadBill: "බිල්පත බාගත කරන්න",
+        businessName: "ව්‍යාපාරයේ නම",
+        downloadPDF: "PDF බාගත කරන්න",
+        saveImage: "පින්තූරය සුරකින්න",
+        advertisement: "වෙළඳ දැන්වීම"
+    },
 
-
-        if (error) {
-
-            console.error(
-                "SESSION ERROR:",
-                error
-            );
-
-            return false;
-        }
-
-
-        if (data.session) {
-
-            currentUser =
-                data.session.user;
-
-            console.log(
-                "Existing session:",
-                currentUser.id
-            );
-
-            await checkSavedBills();
-
-            return true;
-        }
-
-
-        const {
-            data: guestData,
-            error: guestError
-        } =
-            await supabaseClient
-                .auth
-                .signInAnonymously();
-
-
-        if (guestError) {
-
-            console.error(
-                "GUEST SESSION ERROR:",
-                guestError
-            );
-
-            alert(
-                "Could not start the guest session.\n\n" +
-                guestError.message
-            );
-
-            return false;
-        }
-
-
-        currentUser =
-            guestData.user;
-
-
-        console.log(
-            "New guest account:",
-            currentUser.id
-        );
-
-
-        await checkSavedBills();
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "SESSION START ERROR:",
-            error
-        );
-
-        alert(
-            "Could not start the application session."
-        );
-
-        return false;
-
+    ta: {
+        wood: "மரம்",
+        woodType: "மர வகை",
+        price: "CFT விலை",
+        measurement: "அளவீடு",
+        enterDimensions: "அளவுகளை உள்ளிடவும்",
+        calculate: "கணக்கிடு",
+        total: "மொத்தம்",
+        bill: "பில்",
+        billSummary: "பில் சுருக்கம்",
+        saveBill: "பில் சேமி",
+        updateBill: "பில் புதுப்பி",
+        savedBills: "சேமித்த பில்கள்",
+        yourBills: "உங்கள் பில்கள்",
+        billDetails: "பில் விவரங்கள்",
+        downloadBill: "பில் பதிவிறக்கம்",
+        businessName: "வணிகத்தின் பெயர்",
+        downloadPDF: "PDF பதிவிறக்கம்",
+        saveImage: "படமாக சேமி",
+        advertisement: "விளம்பரம்"
     }
 
-}
+};
 
 
-/* ==================================================
-   CHECK SAVED BILLS
-================================================== */
-
-async function checkSavedBills() {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    try {
-
-        const {
-            count,
-            error
-        } =
-            await supabaseClient
-                .from("bills")
-                .select(
-                    "id",
-                    {
-                        count: "exact",
-                        head: true
-                    }
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
-
-
-        if (error) {
-
-            console.error(
-                "CHECK SAVED BILLS ERROR:",
-                error
-            );
-
-            savedBillsButton.style.display =
-                "none";
-
-            return;
-        }
-
-
-        if (count > 0) {
-
-            savedBillsButton.style.display =
-                "block";
-
-        } else {
-
-            savedBillsButton.style.display =
-                "none";
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "CHECK SAVED BILLS ERROR:",
-            error
-        );
-
-        savedBillsButton.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* ==================================================
-   INITIALIZE
-================================================== */
+// ======================================================
+// PAGE LOAD
+// ======================================================
 
 document.addEventListener(
     "DOMContentLoaded",
     async function () {
 
-        saveBillButton.style.display =
-            "none";
+        setupCalculatorInputs();
 
-        savedBillsButton.style.display =
-            "none";
+        setupLanguage();
 
-        await startGuestSession();
+        updateSelectedWood();
 
+        await initializeUser();
+
+        renderCurrentBill();
     }
 );
 
 
-/* ==================================================
-   WOOD SETTINGS
-================================================== */
+// ======================================================
+// SUPABASE ANONYMOUS LOGIN
+// ======================================================
+
+async function initializeUser() {
+
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+            console.error(sessionError);
+        }
+
+        if (
+            sessionData &&
+            sessionData.session &&
+            sessionData.session.user
+        ) {
+
+            currentUser =
+                sessionData.session.user;
+
+            return;
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signInAnonymously();
+
+        if (error) {
+
+            console.error(
+                "Anonymous login error:",
+                error
+            );
+
+            alert(
+                "Could not connect to the database."
+            );
+
+            return;
+        }
+
+        currentUser = data.user;
+
+    }
+    catch (error) {
+
+        console.error(
+            "User initialization error:",
+            error
+        );
+    }
+}
+
+
+// ======================================================
+// LANGUAGE
+// ======================================================
+
+function setupLanguage() {
+
+    const language =
+        document.getElementById(
+            "language-select"
+        );
+
+    if (!language) return;
+
+    language.addEventListener(
+        "change",
+        function () {
+
+            currentLanguage =
+                this.value;
+
+            applyTranslations();
+        }
+    );
+}
+
+
+function applyTranslations() {
+
+    const t =
+        translations[currentLanguage];
+
+    const woodLabel =
+        document.querySelector(
+            ".wood-label"
+        );
+
+    if (woodLabel) {
+        woodLabel.textContent = t.wood;
+    }
+
+
+    const settingLabels =
+        document.querySelectorAll(
+            ".setting label"
+        );
+
+    if (settingLabels.length >= 2) {
+
+        settingLabels[0].textContent =
+            t.woodType;
+
+        settingLabels[1].textContent =
+            t.price;
+    }
+
+
+    const sectionHeadings =
+        document.querySelectorAll(
+            ".section-heading"
+        );
+
+    if (sectionHeadings.length >= 2) {
+
+        const firstSpan =
+            sectionHeadings[0]
+                .querySelector("span");
+
+        const firstH2 =
+            sectionHeadings[0]
+                .querySelector("h2");
+
+        const secondSpan =
+            sectionHeadings[1]
+                .querySelector("span");
+
+        const secondH2 =
+            sectionHeadings[1]
+                .querySelector("h2");
+
+        if (firstSpan)
+            firstSpan.textContent =
+                t.measurement;
+
+        if (firstH2)
+            firstH2.textContent =
+                t.enterDimensions;
+
+        if (secondSpan)
+            secondSpan.textContent =
+                t.bill;
+
+        if (secondH2)
+            secondH2.textContent =
+                t.billSummary;
+    }
+
+
+    const calculateButton =
+        document.querySelector(
+            ".calculate-btn:not(.bill-action)"
+        );
+
+    if (calculateButton) {
+
+        calculateButton.textContent =
+            t.calculate;
+    }
+
+
+    const saveButton =
+        document.getElementById(
+            "save-bill-btn"
+        );
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            editingBillId
+                ? t.updateBill
+                : t.saveBill;
+    }
+
+
+    const savedButton =
+        document.getElementById(
+            "saved-bills-btn"
+        );
+
+    if (savedButton) {
+
+        savedButton.textContent =
+            t.savedBills;
+    }
+
+
+    document
+        .querySelectorAll(".ad-slot span")
+        .forEach(function (element) {
+
+            element.textContent =
+                t.advertisement;
+        });
+}
+
+
+// ======================================================
+// CALCULATOR INPUTS
+// ======================================================
+
+function setupCalculatorInputs() {
+
+    const price =
+        document.getElementById("price");
+
+    const length =
+        document.getElementById("length");
+
+    const width =
+        document.getElementById("width");
+
+
+    if (price) {
+
+        price.addEventListener(
+            "focus",
+            function () {
+
+                selectedInput = price;
+            }
+        );
+    }
+
+
+    if (length) {
+
+        length.addEventListener(
+            "focus",
+            function () {
+
+                selectedInput = length;
+            }
+        );
+    }
+
+
+    if (width) {
+
+        width.addEventListener(
+            "focus",
+            function () {
+
+                selectedInput = width;
+            }
+        );
+    }
+
+
+    selectedInput = price;
+}
+
+
+// ======================================================
+// WOOD SELECTOR
+// ======================================================
 
 function show() {
 
-    see_area.style.display =
-        "block";
+    const area =
+        document.getElementById(
+            "see-area"
+        );
 
+    if (!area) return;
+
+    area.classList.add("active");
 }
 
 
 function off() {
 
-    const woodName =
-        woodType
-            .options[
-                woodType.selectedIndex
-            ]
-            .text;
+    const area =
+        document.getElementById(
+            "see-area"
+        );
 
+    if (area) {
+
+        area.classList.remove("active");
+    }
+
+    updateSelectedWood();
+}
+
+
+function updateSelectedWood() {
+
+    const wood =
+        document.getElementById(
+            "wood-type"
+        );
 
     const price =
-        Number(
-            priceInput.value
+        document.getElementById(
+            "price"
+        );
+
+    const selectedWood =
+        document.getElementById(
+            "selected-wood"
+        );
+
+    const selectedPrice =
+        document.getElementById(
+            "selected-price"
         );
 
 
-    selectedWood.textContent =
-        woodName;
+    if (!wood) return;
 
 
-    if (price > 0) {
+    if (selectedWood) {
+
+        selectedWood.textContent =
+            wood.options[
+                wood.selectedIndex
+            ].text;
+    }
+
+
+    if (
+        selectedPrice &&
+        price &&
+        price.value !== ""
+    ) {
 
         selectedPrice.textContent =
             "LKR " +
-            price.toLocaleString();
+            Number(price.value).toFixed(2);
 
-    } else {
+    }
+    else if (selectedPrice) {
 
         selectedPrice.textContent =
             "LKR 0.00";
-
     }
-
-
-    see_area.style.display =
-        "none";
-
 }
 
 
-/* ==================================================
-   NUMPAD
-================================================== */
+// ======================================================
+// CALCULATION
+// ======================================================
 
-const inputs = [
-    lengthInput,
-    widthInput
-];
+function calculation() {
 
-
-let activeInput =
-    lengthInput;
-
-
-inputs.forEach(
-    function (input) {
-
-        input.addEventListener(
-            "focus",
-            function () {
-
-                activeInput =
-                    this;
-
-            }
+    const woodSelect =
+        document.getElementById(
+            "wood-type"
         );
 
-    }
-);
+    const priceInput =
+        document.getElementById(
+            "price"
+        );
 
+    const lengthInput =
+        document.getElementById(
+            "length"
+        );
 
-function show_numpad() {
-
-    num_pad.style.display =
-        "grid";
-
-    no_btn.style.display =
-        "none";
-
-    activeInput.focus();
-
-}
-
-
-function numPress(number) {
-
-    activeInput.value +=
-        number;
-
-    activeInput.focus();
-
-}
-
-
-function clearInput() {
-
-    activeInput.value =
-        "";
-
-    activeInput.focus();
-
-}
-
-
-function hide_numpad() {
-
-    const length =
-        lengthInput.value;
-
-    const width =
-        widthInput.value;
-
-
-    if (
-        length === "" &&
-        width === ""
-    ) {
-
-        num_pad.style.display =
-            "none";
-
-        no_btn.style.display =
-            "flex";
-
-    }
-
-}
-
-
-function nextInput() {
-
-    const currentIndex =
-        inputs.indexOf(
-            activeInput
+    const widthInput =
+        document.getElementById(
+            "width"
         );
 
 
     if (
-        currentIndex <
-        inputs.length - 1
+        !woodSelect ||
+        !priceInput ||
+        !lengthInput ||
+        !widthInput
     ) {
-
-        activeInput =
-            inputs[
-                currentIndex + 1
-            ];
-
-        activeInput.focus();
-
-    } else {
-
-        num_pad.style.display =
-            "none";
-
-        no_btn.style.display =
-            "flex";
-
+        return;
     }
 
-}
 
+    const woodType =
+        woodSelect.options[
+            woodSelect.selectedIndex
+        ].text;
 
-/* ==================================================
-   CALCULATE
-================================================== */
-
-async function calculation() {
 
     const price =
-        Number(
+        parseFloat(
             priceInput.value
         );
 
     const length =
-        Number(
+        parseFloat(
             lengthInput.value
         );
 
     const width =
-        Number(
+        parseFloat(
             widthInput.value
         );
 
 
-    /* ----------------------------------------------
-       VALIDATION
-    ---------------------------------------------- */
+    if (
+        isNaN(price) ||
+        isNaN(length) ||
+        isNaN(width)
+    ) {
+
+        alert(
+            "Please enter all values."
+        );
+
+        return;
+    }
+
 
     if (
-        price <= 0 ||
+        price < 0 ||
         length <= 0 ||
         width <= 0
     ) {
 
         alert(
-            "Please enter wood price, length and width."
+            "Please enter valid values."
         );
 
         return;
-
     }
 
 
-    /* ----------------------------------------------
-       SESSION
-    ---------------------------------------------- */
-
-    if (!currentUser) {
-
-        const started =
-            await startGuestSession();
-
-
-        if (!started) {
-            return;
-        }
-
-    }
-
-
-    /* ----------------------------------------------
-       CFT
-    ---------------------------------------------- */
-
+    // CFT calculation
     const cft =
         (
             length *
@@ -522,147 +576,205 @@ async function calculation() {
         ) / 2304;
 
 
-    /* ----------------------------------------------
-       PRICE
-    ---------------------------------------------- */
-
     const itemPrice =
-        price *
-        cft;
+        price * cft;
 
-
-    /* ----------------------------------------------
-       WOOD NAME
-    ---------------------------------------------- */
-
-    const woodName =
-        woodType
-            .options[
-                woodType.selectedIndex
-            ]
-            .text;
-
-
-    /* ----------------------------------------------
-       CREATE ITEM
-    ---------------------------------------------- */
 
     const item = {
 
-        wood_type:
-            woodName,
+        localId: Date.now(),
 
-        price_per_cft:
-            price,
+        wood_type: woodType,
 
-        length_ft:
-            length,
+        price_per_cft: price,
 
-        width_in:
-            width,
+        length_ft: length,
 
-        cft:
-            cft,
+        width_in: width,
 
-        item_price:
-            itemPrice
+        cft: cft,
 
+        item_price: itemPrice
     };
 
 
-    currentItems.push(
-        item
-    );
+    currentItems.push(item);
+
+    renderCurrentBill();
 
 
-    /* ----------------------------------------------
-       SHOW ITEM
-    ---------------------------------------------- */
+    lengthInput.value = "";
 
-    bill_body.insertAdjacentHTML(
-        "beforeend",
+    widthInput.value = "";
 
-        `
-        <tr>
-
-            <td>
-                ${width}
-            </td>
-
-            <td>
-                ${length}
-            </td>
-
-            <td>
-                ${cft.toFixed(2)}
-            </td>
-
-            <td>
-                LKR ${itemPrice.toFixed(2)}
-            </td>
-
-        </tr>
-        `
-    );
-
-
-    /* ----------------------------------------------
-       UPDATE TOTAL
-    ---------------------------------------------- */
-
-    total +=
-        itemPrice;
-
-
-    see_total.textContent =
-        "LKR " +
-        total.toFixed(2);
-
-
-    /* ----------------------------------------------
-       SHOW SAVE BILL BUTTON
-    ---------------------------------------------- */
-
-    saveBillButton.style.display =
-        "block";
-
-
-    /* ----------------------------------------------
-       CLEAR INPUTS
-    ---------------------------------------------- */
-
-    lengthInput.value =
-        "";
-
-    widthInput.value =
-        "";
-
-    lengthInput.focus();
-
-
-    console.log(
-        "Item added to current bill."
-    );
-
+    updateSelectedWood();
 }
 
 
-/* ==================================================
-   SAVE BILL
-================================================== */
+// ======================================================
+// CURRENT BILL
+// ======================================================
+
+function renderCurrentBill() {
+
+    const body =
+        document.getElementById(
+            "bill-body"
+        );
+
+    const totalElement =
+        document.getElementById(
+            "total"
+        );
+
+
+    if (!body) return;
+
+
+    body.innerHTML = "";
+
+
+    let total = 0;
+
+
+    currentItems.forEach(
+        function (item, index) {
+
+            total +=
+                Number(
+                    item.item_price
+                );
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHTML(item.wood_type)}
+                </td>
+
+                <td>
+                    ${Number(
+                        item.width_in
+                    ).toFixed(2)}
+                </td>
+
+                <td>
+                    ${Number(
+                        item.length_ft
+                    ).toFixed(2)}
+                </td>
+
+                <td>
+                    ${Number(
+                        item.cft
+                    ).toFixed(3)}
+                </td>
+
+                <td>
+                    LKR ${Number(
+                        item.item_price
+                    ).toFixed(2)}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="delete-item-btn"
+                        onclick="removeCurrentItem(${index})"
+                    >
+                        ×
+                    </button>
+
+                </td>
+            `;
+
+
+            body.appendChild(row);
+        }
+    );
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            "LKR " +
+            total.toFixed(2);
+    }
+
+
+    const saveButton =
+        document.getElementById(
+            "save-bill-btn"
+        );
+
+    const savedButton =
+        document.getElementById(
+            "saved-bills-btn"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.style.display =
+            currentItems.length > 0
+                ? "block"
+                : "none";
+    }
+
+
+    if (savedButton) {
+
+        savedButton.style.display =
+            "block";
+    }
+}
+
+
+// ======================================================
+// REMOVE CURRENT ITEM
+// ======================================================
+
+function removeCurrentItem(index) {
+
+    currentItems.splice(
+        index,
+        1
+    );
+
+    renderCurrentBill();
+}
+
+
+// ======================================================
+// SAVE BILL
+// ======================================================
 
 function saveBill() {
 
-    if (
-        currentItems.length === 0
-    ) {
+    if (!currentUser) {
 
         alert(
-            "Add at least one item before saving the bill."
+            "Connecting to database. Please try again."
         );
 
         return;
+    }
 
+
+    if (currentItems.length === 0) {
+
+        alert(
+            "Please calculate at least one item first."
+        );
+
+        return;
     }
 
 
@@ -671,38 +783,71 @@ function saveBill() {
             "save-modal"
         );
 
-
-    const nameInput =
+    const title =
         document.getElementById(
-            "bill-name"
+            "save-modal-title"
         );
 
+    const saveButton =
+        modal
+            ? modal.querySelector(
+                ".modal-action"
+            )
+            : null;
 
-    nameInput.value =
-        "";
+
+    if (title) {
+
+        title.textContent =
+            editingBillId
+                ? "Update your bill"
+                : "Give your bill a name";
+    }
 
 
-    modal.style.display =
-        "flex";
+    if (saveButton) {
+
+        saveButton.textContent =
+            editingBillId
+                ? "Update Bill"
+                : "Save Bill";
+    }
 
 
-    setTimeout(
-        function () {
+    if (modal) {
 
-            nameInput.focus();
-
-        },
-        100
-    );
-
+        modal.classList.add(
+            "active"
+        );
+    }
 }
 
 
-/* ==================================================
-   CONFIRM SAVE BILL
-================================================== */
+// ======================================================
+// CONFIRM SAVE
+// ======================================================
 
 async function confirmSaveBill() {
+
+    if (!currentUser) {
+
+        alert(
+            "User is not connected."
+        );
+
+        return;
+    }
+
+
+    if (currentItems.length === 0) {
+
+        alert(
+            "There are no items to save."
+        );
+
+        return;
+    }
+
 
     const nameInput =
         document.getElementById(
@@ -711,7 +856,9 @@ async function confirmSaveBill() {
 
 
     const billName =
-        nameInput.value.trim();
+        nameInput
+            ? nameInput.value.trim()
+            : "";
 
 
     if (!billName) {
@@ -720,94 +867,160 @@ async function confirmSaveBill() {
             "Please enter a bill name."
         );
 
-        nameInput.focus();
-
         return;
-
     }
 
 
-    if (!currentUser) {
+    const total =
+        currentItems.reduce(
+            function (sum, item) {
 
-        const started =
-            await startGuestSession();
-
-
-        if (!started) {
-            return;
-        }
-
-    }
-
-
-    const saveButton =
-        document.querySelector(
-            ".modal-action"
+                return (
+                    sum +
+                    Number(
+                        item.item_price
+                    )
+                );
+            },
+            0
         );
 
 
-    saveButton.disabled =
-        true;
+    closeSaveModal();
 
 
-    saveButton.textContent =
-        "Saving...";
+    requestAdThen(
+        async function () {
 
+            await saveBillToDatabase(
+                billName,
+                total
+            );
+        },
+        "save"
+    );
+}
+
+
+// ======================================================
+// SAVE / UPDATE BILL
+// ======================================================
+
+async function saveBillToDatabase(
+    billName,
+    total
+) {
 
     try {
 
-        /* ------------------------------------------
-           CREATE BILL
-        ------------------------------------------ */
-
-        const {
-            data: bill,
-            error: billError
-        } =
-            await supabaseClient
-                .from("bills")
-                .insert({
-
-                    user_id:
-                        currentUser.id,
-
-                    bill_name:
-                        billName,
-
-                    total:
-                        total
-
-                })
-                .select()
-                .single();
+        let billId =
+            editingBillId;
 
 
-        if (billError) {
-            throw billError;
+        // ==================================================
+        // UPDATE EXISTING BILL
+        // ==================================================
+
+        if (editingBillId) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("bills")
+                    .update({
+                        bill_name: billName,
+                        total: total
+                    })
+                    .eq(
+                        "id",
+                        editingBillId
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            // Delete old items
+            const {
+                error: deleteError
+            } =
+                await supabaseClient
+                    .from("wood_calculations")
+                    .delete()
+                    .eq(
+                        "bill_id",
+                        editingBillId
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
+
+            if (deleteError) {
+                throw deleteError;
+            }
+
         }
 
 
-        if (!bill) {
+        // ==================================================
+        // CREATE NEW BILL
+        // ==================================================
 
-            throw new Error(
-                "The bill was not returned after saving."
-            );
+        else {
 
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("bills")
+                    .insert({
+
+                        user_id:
+                            currentUser.id,
+
+                        bill_name:
+                            billName,
+
+                        total:
+                            total
+
+                    })
+                    .select()
+                    .single();
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            billId =
+                data.id;
         }
 
 
-        /* ------------------------------------------
-           PREPARE ITEMS
-        ------------------------------------------ */
+        // ==================================================
+        // INSERT BILL ITEMS
+        // ==================================================
 
-        const itemsToSave =
+        const rows =
             currentItems.map(
                 function (item) {
 
                     return {
 
                         bill_id:
-                            bill.id,
+                            billId,
 
                         user_id:
                             currentUser.id,
@@ -829,85 +1042,40 @@ async function confirmSaveBill() {
 
                         item_price:
                             item.item_price
-
                     };
-
                 }
             );
 
-
-        /* ------------------------------------------
-           SAVE ITEMS
-        ------------------------------------------ */
 
         const {
             error: itemError
         } =
             await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .insert(
-                    itemsToSave
-                );
+                .from("wood_calculations")
+                .insert(rows);
 
 
         if (itemError) {
-
-            /*
-
-               The bill itself may already have
-               been created. We report the exact
-               item-saving error instead of hiding it.
-
-            */
-
             throw itemError;
-
         }
 
 
-        /* ------------------------------------------
-           SUCCESS
-        ------------------------------------------ */
-
-        closeSaveModal();
-
-
         alert(
-            `"${billName}" saved successfully.`
+            editingBillId
+                ? "Bill updated successfully!"
+                : "Bill saved successfully!"
         );
 
 
-        console.log(
-            "Bill saved:",
-            bill
-        );
-
-
-        /* ------------------------------------------
-           BUTTON STATE
-        ------------------------------------------ */
-
-        saveBillButton.style.display =
-            "none";
-
-
-        savedBillsButton.style.display =
-            "block";
-
-
-        /* ------------------------------------------
-           START NEW BILL
-        ------------------------------------------ */
+        editingBillId = null;
 
         startNewBill();
 
-
-    } catch (error) {
+    }
+    catch (error) {
 
         console.error(
-            "SAVE BILL ERROR:",
+            "Save error:",
             error
         );
 
@@ -916,64 +1084,104 @@ async function confirmSaveBill() {
             "Could not save the bill.\n\n" +
             error.message
         );
-
     }
-
-
-    saveButton.disabled =
-        false;
-
-
-    saveButton.textContent =
-        "Save Bill";
-
 }
 
 
-/* ==================================================
-   START NEW BILL
-================================================== */
+// ======================================================
+// CLOSE SAVE MODAL
+// ======================================================
+
+function closeSaveModal() {
+
+    const modal =
+        document.getElementById(
+            "save-modal"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
+}
+
+
+// ======================================================
+// NEW BILL
+// ======================================================
 
 function startNewBill() {
 
-    currentItems =
-        [];
+    currentItems = [];
 
-    total =
-        0;
+    editingBillId = null;
 
 
-    bill_body.innerHTML =
-        "";
+    const billName =
+        document.getElementById(
+            "bill-name"
+        );
+
+    const price =
+        document.getElementById(
+            "price"
+        );
+
+    const length =
+        document.getElementById(
+            "length"
+        );
+
+    const width =
+        document.getElementById(
+            "width"
+        );
 
 
-    see_total.textContent =
-        "LKR 0.00";
+    if (billName)
+        billName.value = "";
 
 
-    lengthInput.value =
-        "";
-
-    widthInput.value =
-        "";
+    if (price)
+        price.value = "";
 
 
-    lengthInput.focus();
+    if (length)
+        length.value = "";
 
+
+    if (width)
+        width.value = "";
+
+
+    renderCurrentBill();
+
+    updateSelectedWood();
 }
 
 
-/* ==================================================
-   SHOW SAVED BILLS
-================================================== */
+// ======================================================
+// SHOW SAVED BILLS
+// ======================================================
 
 async function showSavedBills() {
+
+    if (!currentUser) {
+
+        alert(
+            "User is not connected."
+        );
+
+        return;
+    }
+
 
     const modal =
         document.getElementById(
             "saved-modal"
         );
-
 
     const list =
         document.getElementById(
@@ -981,229 +1189,290 @@ async function showSavedBills() {
         );
 
 
-    modal.style.display =
-        "flex";
-
-
-    list.innerHTML = `
-        <p class="empty-bills">
-            Loading your bills...
-        </p>
-    `;
-
-
-    if (!currentUser) {
-
-        const started =
-            await startGuestSession();
-
-
-        if (!started) {
-            return;
-        }
-
-    }
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("bills")
-            .select(
-                "id, bill_name, total, created_at"
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (error) {
-
-        console.error(
-            "LOAD BILLS ERROR:",
-            error
-        );
-
-
-        list.innerHTML = `
-            <p class="empty-bills">
-                Could not load your bills.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        list.innerHTML = `
-            <div class="empty-bills">
-                <p>
-                    No saved bills yet.
-                </p>
-            </div>
-        `;
-
-        return;
-
-    }
+    if (!list) return;
 
 
     list.innerHTML =
-        "";
+        "<p>Loading bills...</p>";
 
 
-    data.forEach(
-        function (bill) {
+    if (modal) {
 
-            const date =
-                new Date(
-                    bill.created_at
-                ).toLocaleDateString();
+        modal.classList.add(
+            "active"
+        );
+    }
 
 
-            list.insertAdjacentHTML(
-                "beforeend",
+    try {
 
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("bills")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        list.innerHTML = "";
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            list.innerHTML =
                 `
-                <button
-                    class="saved-bill-item"
-                    onclick="openSavedBill('${bill.id}')"
-                >
+                <p class="empty-bills">
+                    No saved bills yet.
+                </p>
+                `;
 
-                    <div>
+            return;
+        }
 
-                        <strong>
+
+        data.forEach(
+            function (bill) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "saved-bill-card";
+
+
+                card.innerHTML = `
+
+                    <div
+                        class="saved-bill-info"
+                        onclick="openSavedBill('${bill.id}')"
+                    >
+
+                        <h3>
                             ${escapeHTML(
                                 bill.bill_name
                             )}
-                        </strong>
+                        </h3>
+
+                        <p>
+                            LKR
+                            ${Number(
+                                bill.total
+                            ).toFixed(2)}
+                        </p>
 
                         <small>
-                            ${date}
+                            ${formatDate(
+                                bill.created_at
+                            )}
                         </small>
 
                     </div>
 
 
-                    <span>
-                        LKR ${Number(
-                            bill.total
-                        ).toFixed(2)}
-                    </span>
+                    <div
+                        class="saved-bill-actions"
+                    >
 
-                </button>
-                `
-            );
+                        <button
+                            type="button"
+                            class="icon-action"
+                            title="Download"
+                            onclick="openDownloadModal('${bill.id}')"
+                        >
+                            ↓
+                        </button>
 
-        }
-    );
 
+                        <button
+                            type="button"
+                            class="icon-action"
+                            title="Edit"
+                            onclick="editSavedBill('${bill.id}')"
+                        >
+                            ✎
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="icon-action delete-action"
+                            title="Delete"
+                            onclick="deleteSavedBill('${bill.id}')"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+                `;
+
+
+                list.appendChild(card);
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Saved bills error:",
+            error
+        );
+
+
+        list.innerHTML =
+            `
+            <p>
+                ${escapeHTML(
+                    error.message
+                )}
+            </p>
+            `;
+    }
 }
 
 
-/* ==================================================
-   OPEN SAVED BILL
-================================================== */
+// ======================================================
+// CLOSE SAVED BILLS
+// ======================================================
+
+function closeSavedBills() {
+
+    const modal =
+        document.getElementById(
+            "saved-modal"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
+}
+
+
+// ======================================================
+// OPEN SAVED BILL
+// ======================================================
 
 async function openSavedBill(
     billId
 ) {
 
-    const {
-        data: bill,
-        error: billError
-    } =
-        await supabaseClient
-            .from("bills")
-            .select(
-                "id, bill_name, total, created_at"
-            )
-            .eq(
-                "id",
-                billId
-            )
-            .single();
+    if (!currentUser) return;
 
 
-    if (billError) {
+    try {
 
-        console.error(
-            "LOAD BILL ERROR:",
-            billError
+        const {
+            data: bill,
+            error: billError
+        } =
+            await supabaseClient
+                .from("bills")
+                .select("*")
+                .eq(
+                    "id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .single();
+
+
+        if (billError) {
+            throw billError;
+        }
+
+
+        const {
+            data: items,
+            error: itemError
+        } =
+            await supabaseClient
+                .from("wood_calculations")
+                .select("*")
+                .eq(
+                    "bill_id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (itemError) {
+            throw itemError;
+        }
+
+
+        renderViewBill(
+            bill,
+            items || []
         );
-
-
-        alert(
-            "Could not load the bill.\n\n" +
-            billError.message
-        );
-
-        return;
 
     }
+    catch (error) {
 
-
-    const {
-        data: items,
-        error: itemError
-    } =
-        await supabaseClient
-            .from(
-                "wood_calculations"
-            )
-            .select(
-                "wood_type, price_per_cft, length_ft, width_in, cft, item_price"
-            )
-            .eq(
-                "bill_id",
-                billId
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            );
-
-
-    if (itemError) {
-
-        console.error(
-            "LOAD BILL ITEMS ERROR:",
-            itemError
-        );
-
+        console.error(error);
 
         alert(
-            "Could not load bill items.\n\n" +
-            itemError.message
+            "Could not open bill.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+// ======================================================
+// VIEW BILL
+// ======================================================
+
+function renderViewBill(
+    bill,
+    items
+) {
+
+    const modal =
+        document.getElementById(
+            "view-modal"
         );
 
-        return;
-
-    }
-
-
-    document.getElementById(
-        "view-bill-name"
-    ).textContent =
-        bill.bill_name;
-
+    const title =
+        document.getElementById(
+            "view-bill-name"
+        );
 
     const content =
         document.getElementById(
@@ -1211,14 +1480,49 @@ async function openSavedBill(
         );
 
 
-    let rows =
-        "";
+    if (!modal || !content)
+        return;
+
+
+    if (title) {
+
+        title.textContent =
+            bill.bill_name;
+    }
+
+
+    modal.dataset.billId =
+        bill.id;
+
+
+    let html = `
+
+        <div class="view-bill-table">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Wood</th>
+                        <th>Width</th>
+                        <th>Length</th>
+                        <th>CFT</th>
+                        <th>Price</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+    `;
 
 
     items.forEach(
         function (item) {
 
-            rows += `
+            html += `
 
                 <tr>
 
@@ -1229,60 +1533,722 @@ async function openSavedBill(
                     </td>
 
                     <td>
-                        ${item.width_in}
+                        ${Number(
+                            item.width_in
+                        ).toFixed(2)}
                     </td>
 
                     <td>
-                        ${item.length_ft}
+                        ${Number(
+                            item.length_ft
+                        ).toFixed(2)}
                     </td>
 
                     <td>
                         ${Number(
                             item.cft
-                        ).toFixed(2)}
+                        ).toFixed(3)}
                     </td>
 
                     <td>
-                        LKR ${Number(
+                        LKR
+                        ${Number(
                             item.item_price
                         ).toFixed(2)}
                     </td>
 
                 </tr>
-
             `;
-
         }
     );
 
 
-    content.innerHTML = `
+    html += `
 
-        <div class="preview">
+                </tbody>
 
-            <table>
+            </table>
+
+
+            <div class="view-total">
+
+                <strong>
+                    Total:
+                </strong>
+
+                <span>
+                    LKR
+                    ${Number(
+                        bill.total
+                    ).toFixed(2)}
+                </span>
+
+            </div>
+
+        </div>
+    `;
+
+
+    content.innerHTML =
+        html;
+
+
+    modal.classList.add(
+        "active"
+    );
+
+
+    closeSavedBills();
+}
+
+
+// ======================================================
+// CLOSE VIEW BILL
+// ======================================================
+
+function closeViewBill() {
+
+    const modal =
+        document.getElementById(
+            "view-modal"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
+}
+
+
+// ======================================================
+// EDIT SAVED BILL
+// ======================================================
+
+async function editSavedBill(
+    billId
+) {
+
+    if (!currentUser) return;
+
+
+    try {
+
+        const {
+            data: bill,
+            error: billError
+        } =
+            await supabaseClient
+                .from("bills")
+                .select("*")
+                .eq(
+                    "id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .single();
+
+
+        if (billError) {
+            throw billError;
+        }
+
+
+        const {
+            data: items,
+            error: itemError
+        } =
+            await supabaseClient
+                .from("wood_calculations")
+                .select("*")
+                .eq(
+                    "bill_id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (itemError) {
+            throw itemError;
+        }
+
+
+        editingBillId =
+            billId;
+
+
+        currentItems =
+            (items || []).map(
+                function (item) {
+
+                    return {
+
+                        localId:
+                            Date.now() +
+                            Math.random(),
+
+                        wood_type:
+                            item.wood_type,
+
+                        price_per_cft:
+                            Number(
+                                item.price_per_cft
+                            ),
+
+                        length_ft:
+                            Number(
+                                item.length_ft
+                            ),
+
+                        width_in:
+                            Number(
+                                item.width_in
+                            ),
+
+                        cft:
+                            Number(
+                                item.cft
+                            ),
+
+                        item_price:
+                            Number(
+                                item.item_price
+                            )
+                    };
+                }
+            );
+
+
+        const billName =
+            document.getElementById(
+                "bill-name"
+            );
+
+
+        if (billName) {
+
+            billName.value =
+                bill.bill_name;
+        }
+
+
+        renderCurrentBill();
+
+        closeSavedBills();
+
+
+        // Open save modal for update
+        saveBill();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Could not edit bill.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+// ======================================================
+// DELETE SAVED BILL
+// ======================================================
+
+async function deleteSavedBill(
+    billId
+) {
+
+    if (!currentUser) return;
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this bill?"
+        );
+
+
+    if (!confirmed)
+        return;
+
+
+    try {
+
+        // Delete items first
+        const {
+            error: itemError
+        } =
+            await supabaseClient
+                .from("wood_calculations")
+                .delete()
+                .eq(
+                    "bill_id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+
+        if (itemError) {
+            throw itemError;
+        }
+
+
+        // Then delete main bill
+        const {
+            error: billError
+        } =
+            await supabaseClient
+                .from("bills")
+                .delete()
+                .eq(
+                    "id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+
+        if (billError) {
+            throw billError;
+        }
+
+
+        alert(
+            "Bill deleted successfully!"
+        );
+
+
+        await showSavedBills();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Could not delete bill.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+// ======================================================
+// DOWNLOAD MODAL
+// ======================================================
+
+function openDownloadModal(
+    billId
+) {
+
+    downloadBillId =
+        billId;
+
+
+    const modal =
+        document.getElementById(
+            "download-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.add(
+            "active"
+        );
+    }
+}
+
+
+function openDownloadModalFromView() {
+
+    const modal =
+        document.getElementById(
+            "view-modal"
+        );
+
+
+    if (!modal) return;
+
+
+    const billId =
+        modal.dataset.billId;
+
+
+    if (!billId) {
+
+        alert(
+            "Bill ID not found."
+        );
+
+        return;
+    }
+
+
+    openDownloadModal(
+        billId
+    );
+}
+
+
+function closeDownloadModal() {
+
+    const modal =
+        document.getElementById(
+            "download-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
+
+
+    downloadBillId =
+        null;
+}
+
+
+// ======================================================
+// DOWNLOAD SAVED BILL
+// ======================================================
+
+function downloadSavedBill(
+    format
+) {
+
+    if (!downloadBillId) {
+
+        alert(
+            "Bill not selected."
+        );
+
+        return;
+    }
+
+
+    const businessInput =
+        document.getElementById(
+            "business-name"
+        );
+
+
+    const businessName =
+        businessInput
+            ? businessInput.value.trim()
+            : "";
+
+
+    if (!businessName) {
+
+        alert(
+            "Please enter your business name."
+        );
+
+        return;
+    }
+
+
+    const billId =
+        downloadBillId;
+
+
+    closeDownloadModal();
+
+
+    requestAdThen(
+        async function () {
+
+            await generateBillDownload(
+                billId,
+                businessName,
+                format
+            );
+        },
+        "download"
+    );
+}
+
+
+// ======================================================
+// GENERATE DOWNLOAD
+// ======================================================
+
+async function generateBillDownload(
+    billId,
+    businessName,
+    format
+) {
+
+    let documentElement = null;
+
+
+    try {
+
+        const {
+            data: bill,
+            error: billError
+        } =
+            await supabaseClient
+                .from("bills")
+                .select("*")
+                .eq(
+                    "id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .single();
+
+
+        if (billError) {
+            throw billError;
+        }
+
+
+        const {
+            data: items,
+            error: itemError
+        } =
+            await supabaseClient
+                .from("wood_calculations")
+                .select("*")
+                .eq(
+                    "bill_id",
+                    billId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (itemError) {
+            throw itemError;
+        }
+
+
+        documentElement =
+            document.createElement(
+                "div"
+            );
+
+
+        documentElement.style.position =
+            "fixed";
+
+        documentElement.style.left =
+            "-10000px";
+
+        documentElement.style.top =
+            "0";
+
+        documentElement.style.width =
+            "794px";
+
+        documentElement.style.padding =
+            "40px";
+
+        documentElement.style.background =
+            "white";
+
+        documentElement.style.color =
+            "black";
+
+        documentElement.style.fontFamily =
+            "Arial, sans-serif";
+
+
+        let rows = "";
+
+
+        (items || []).forEach(
+            function (item, index) {
+
+                rows += `
+
+                    <tr>
+
+                        <td>
+                            ${index + 1}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                item.wood_type
+                            )}
+                        </td>
+
+                        <td>
+                            ${Number(
+                                item.width_in
+                            ).toFixed(2)}
+                        </td>
+
+                        <td>
+                            ${Number(
+                                item.length_ft
+                            ).toFixed(2)}
+                        </td>
+
+                        <td>
+                            ${Number(
+                                item.cft
+                            ).toFixed(3)}
+                        </td>
+
+                        <td>
+                            LKR
+                            ${Number(
+                                item.price_per_cft
+                            ).toFixed(2)}
+                        </td>
+
+                        <td>
+                            LKR
+                            ${Number(
+                                item.item_price
+                            ).toFixed(2)}
+                        </td>
+
+                    </tr>
+                `;
+            }
+        );
+
+
+        documentElement.innerHTML = `
+
+            <div
+                style="
+                    text-align:center;
+                    margin-bottom:30px;
+                "
+            >
+
+                <h1>
+                    ${escapeHTML(
+                        businessName
+                    )}
+                </h1>
+
+                <h2>
+                    ${escapeHTML(
+                        bill.bill_name
+                    )}
+                </h2>
+
+                <p>
+                    ${formatDate(
+                        bill.created_at
+                    )}
+                </p>
+
+            </div>
+
+
+            <table
+                style="
+                    width:100%;
+                    border-collapse:collapse;
+                "
+            >
 
                 <thead>
 
                     <tr>
 
-                        <th>
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
+                            #
+                        </th>
+
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
                             Wood
                         </th>
 
-                        <th>
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
                             Width
                         </th>
 
-                        <th>
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
                             Length
                         </th>
 
-                        <th>
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
                             CFT
                         </th>
 
-                        <th>
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
+                            Price/CFT
+                        </th>
+
+                        <th
+                            style="
+                                padding:10px;
+                                border:1px solid #ccc;
+                            "
+                        >
                             Price
                         </th>
 
@@ -1299,82 +2265,576 @@ async function openSavedBill(
 
             </table>
 
-        </div>
 
+            <div
+                style="
+                    text-align:right;
+                    font-size:22px;
+                    font-weight:bold;
+                    margin-top:25px;
+                "
+            >
 
-        <div class="saved-total">
-
-            <span>
-                TOTAL
-            </span>
-
-            <strong>
-                LKR ${Number(
+                Total:
+                LKR
+                ${Number(
                     bill.total
                 ).toFixed(2)}
-            </strong>
 
-        </div>
-
-    `;
+            </div>
+        `;
 
 
-    closeSavedBills();
+        document.body.appendChild(
+            documentElement
+        );
 
 
-    document.getElementById(
-        "view-modal"
-    ).style.display =
-        "flex";
+        if (
+            typeof html2canvas !==
+            "function"
+        ) {
 
+            throw new Error(
+                "html2canvas library is not loaded."
+            );
+        }
+
+
+        const canvas =
+            await html2canvas(
+                documentElement,
+                {
+                    scale: 2,
+                    backgroundColor:
+                        "#ffffff"
+                }
+            );
+
+
+        // ==================================================
+        // IMAGE
+        // ==================================================
+
+        if (format === "image") {
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.download =
+                sanitizeFileName(
+                    bill.bill_name
+                ) +
+                ".png";
+
+
+            link.href =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            document.body.appendChild(
+                link
+            );
+
+
+            link.click();
+
+
+            link.remove();
+
+        }
+
+
+        // ==================================================
+        // PDF
+        // ==================================================
+
+        else {
+
+            if (
+                !window.jspdf ||
+                !window.jspdf.jsPDF
+            ) {
+
+                throw new Error(
+                    "jsPDF library is not loaded."
+                );
+            }
+
+
+            const jsPDF =
+                window.jspdf.jsPDF;
+
+
+            const pdf =
+                new jsPDF(
+                    "p",
+                    "mm",
+                    "a4"
+                );
+
+
+            const imageData =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            const pageWidth =
+                pdf.internal.pageSize
+                    .getWidth();
+
+
+            const pageHeight =
+                pdf.internal.pageSize
+                    .getHeight();
+
+
+            const margin = 10;
+
+
+            const imageWidth =
+                pageWidth -
+                margin * 2;
+
+
+            const imageHeight =
+                canvas.height *
+                imageWidth /
+                canvas.width;
+
+
+            let heightLeft =
+                imageHeight;
+
+
+            let position =
+                margin;
+
+
+            pdf.addImage(
+                imageData,
+                "PNG",
+                margin,
+                position,
+                imageWidth,
+                imageHeight
+            );
+
+
+            heightLeft -=
+                pageHeight -
+                margin * 2;
+
+
+            while (
+                heightLeft > 0
+            ) {
+
+                position =
+                    heightLeft -
+                    imageHeight +
+                    margin;
+
+
+                pdf.addPage();
+
+
+                pdf.addImage(
+                    imageData,
+                    "PNG",
+                    margin,
+                    position,
+                    imageWidth,
+                    imageHeight
+                );
+
+
+                heightLeft -=
+                    pageHeight -
+                    margin * 2;
+            }
+
+
+            pdf.save(
+                sanitizeFileName(
+                    bill.bill_name
+                ) +
+                ".pdf"
+            );
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Download error:",
+            error
+        );
+
+
+        alert(
+            "Could not generate download.\n\n" +
+            error.message
+        );
+
+    }
+    finally {
+
+        if (documentElement) {
+
+            documentElement.remove();
+        }
+    }
 }
 
 
-/* ==================================================
-   CLOSE SAVE MODAL
-================================================== */
+// ======================================================
+// AD GATE
+// ======================================================
 
-function closeSaveModal() {
+function requestAdThen(
+    callback,
+    actionType
+) {
 
-    document.getElementById(
-        "save-modal"
-    ).style.display =
-        "none";
+    pendingAdAction =
+        callback;
 
+
+    const modal =
+        document.getElementById(
+            "ad-gate-modal"
+        );
+
+
+    const message =
+        document.getElementById(
+            "ad-gate-message"
+        );
+
+
+    if (message) {
+
+        if (
+            actionType === "save"
+        ) {
+
+            message.textContent =
+                "Watch the advertisement before saving your bill.";
+
+        }
+        else {
+
+            message.textContent =
+                "Watch the advertisement before downloading your bill.";
+        }
+    }
+
+
+    if (modal) {
+
+        modal.classList.add(
+            "active"
+        );
+    }
 }
 
 
-/* ==================================================
-   CLOSE SAVED BILLS
-================================================== */
+// ======================================================
+// COMPLETE AD
+// ======================================================
 
-function closeSavedBills() {
+function completeAdGate() {
 
-    document.getElementById(
-        "saved-modal"
-    ).style.display =
-        "none";
+    const modal =
+        document.getElementById(
+            "ad-gate-modal"
+        );
 
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
+
+
+    if (
+        typeof pendingAdAction ===
+        "function"
+    ) {
+
+        const action =
+            pendingAdAction;
+
+
+        pendingAdAction =
+            null;
+
+
+        action();
+    }
 }
 
 
-/* ==================================================
-   CLOSE VIEW BILL
-================================================== */
+// ======================================================
+// CANCEL AD
+// ======================================================
 
-function closeViewBill() {
+function cancelAdGate() {
 
-    document.getElementById(
-        "view-modal"
-    ).style.display =
-        "none";
+    pendingAdAction =
+        null;
 
+
+    const modal =
+        document.getElementById(
+            "ad-gate-modal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "active"
+        );
+    }
 }
 
 
-/* ==================================================
-   SECURITY HELPER
-================================================== */
+// ======================================================
+// NUMPAD
+// ======================================================
+
+function show_numpad() {
+
+    const numpad =
+        document.getElementById(
+            "num-pad"
+        );
+
+
+    const button =
+        document.getElementById(
+            "show_num"
+        );
+
+
+    if (!selectedInput) {
+
+        selectedInput =
+            document.getElementById(
+                "price"
+            );
+    }
+
+
+    if (numpad) {
+
+        numpad.classList.add(
+            "active"
+        );
+    }
+
+
+    if (button) {
+
+        button.classList.add(
+            "active"
+        );
+    }
+
+
+    if (selectedInput) {
+
+        selectedInput.focus();
+    }
+}
+
+
+function hide_numpad() {
+
+    const numpad =
+        document.getElementById(
+            "num-pad"
+        );
+
+
+    const button =
+        document.getElementById(
+            "show_num"
+        );
+
+
+    if (numpad) {
+
+        numpad.classList.remove(
+            "active"
+        );
+    }
+
+
+    if (button) {
+
+        button.classList.remove(
+            "active"
+        );
+    }
+}
+
+
+function numPress(number) {
+
+    if (!selectedInput) {
+
+        selectedInput =
+            document.getElementById(
+                "price"
+            );
+    }
+
+
+    if (!selectedInput)
+        return;
+
+
+    selectedInput.value +=
+        number;
+
+
+    selectedInput.dispatchEvent(
+        new Event(
+            "input",
+            {
+                bubbles: true
+            }
+        )
+    );
+
+
+    selectedInput.focus();
+}
+
+
+function clearInput() {
+
+    if (!selectedInput)
+        return;
+
+
+    selectedInput.value = "";
+
+
+    selectedInput.focus();
+
+
+    selectedInput.dispatchEvent(
+        new Event(
+            "input",
+            {
+                bubbles: true
+            }
+        )
+    );
+}
+
+
+function nextInput() {
+
+    const inputs = [
+
+        document.getElementById(
+            "price"
+        ),
+
+        document.getElementById(
+            "length"
+        ),
+
+        document.getElementById(
+            "width"
+        )
+    ];
+
+
+    const currentIndex =
+        inputs.indexOf(
+            selectedInput
+        );
+
+
+    if (
+        currentIndex >= 0 &&
+        currentIndex <
+        inputs.length - 1
+    ) {
+
+        selectedInput =
+            inputs[
+                currentIndex + 1
+            ];
+
+
+        selectedInput.focus();
+
+    }
+    else {
+
+        hide_numpad();
+    }
+}
+
+
+// ======================================================
+// DATE FORMAT
+// ======================================================
+
+function formatDate(date) {
+
+    if (!date)
+        return "";
+
+
+    let locale =
+        "en-US";
+
+
+    if (
+        currentLanguage === "si"
+    ) {
+
+        locale =
+            "si-LK";
+    }
+
+
+    if (
+        currentLanguage === "ta"
+    ) {
+
+        locale =
+            "ta-LK";
+    }
+
+
+    return new Date(
+        date
+    ).toLocaleString(
+        locale
+    );
+}
+
+
+// ======================================================
+// ESCAPE HTML
+// ======================================================
 
 function escapeHTML(value) {
 
@@ -1385,19 +2845,40 @@ function escapeHTML(value) {
 
 
     div.textContent =
-        value;
+        value ?? "";
 
 
     return div.innerHTML;
-
 }
 
 
-/* ==================================================
-   CLOSE MODALS OUTSIDE
-================================================== */
+// ======================================================
+// SAFE FILE NAME
+// ======================================================
 
-window.addEventListener(
+function sanitizeFileName(name) {
+
+    return String(name)
+
+        .replace(
+            /[<>:"/\\|?*]+/g,
+            "_"
+        )
+
+        .trim()
+
+        .substring(
+            0,
+            100
+        );
+}
+
+
+// ======================================================
+// CLOSE MODALS WHEN CLICKING BACKGROUND
+// ======================================================
+
+document.addEventListener(
     "click",
     function (event) {
 
@@ -1406,16 +2887,24 @@ window.addEventListener(
                 "save-modal"
             );
 
-
         const savedModal =
             document.getElementById(
                 "saved-modal"
             );
 
-
         const viewModal =
             document.getElementById(
                 "view-modal"
+            );
+
+        const downloadModal =
+            document.getElementById(
+                "download-modal"
+            );
+
+        const adModal =
+            document.getElementById(
+                "ad-gate-modal"
             );
 
 
@@ -1425,7 +2914,6 @@ window.addEventListener(
         ) {
 
             closeSaveModal();
-
         }
 
 
@@ -1435,7 +2923,6 @@ window.addEventListener(
         ) {
 
             closeSavedBills();
-
         }
 
 
@@ -1445,8 +2932,81 @@ window.addEventListener(
         ) {
 
             closeViewBill();
+        }
 
+
+        if (
+            event.target ===
+            downloadModal
+        ) {
+
+            closeDownloadModal();
+        }
+
+
+        if (
+            event.target ===
+            adModal
+        ) {
+
+            cancelAdGate();
         }
 
     }
 );
+
+
+// ======================================================
+// UPDATE WOOD PRICE DISPLAY
+// ======================================================
+
+document.addEventListener(
+    "input",
+    function (event) {
+
+        if (
+            event.target &&
+            event.target.id ===
+            "price"
+        ) {
+
+            updateSelectedWood();
+        }
+    }
+);
+
+
+// ======================================================
+// WOOD SELECT CHANGE
+// ======================================================
+
+document.addEventListener(
+    "change",
+    function (event) {
+
+        if (
+            event.target &&
+            event.target.id ===
+            "wood-type"
+        ) {
+
+            updateSelectedWood();
+        }
+    }
+);
+
+const instructions = document.getElementById("instructions");
+const closeInstructions = document.getElementById("closeInstructions");
+
+// Check if the user has already seen the instructions
+if (localStorage.getItem("instructionsSeen") === "true") {
+    instructions.style.display = "none";
+}
+
+// Close instructions
+closeInstructions.addEventListener("click", () => {
+    instructions.style.display = "none";
+
+    // Remember that this user has seen it
+    localStorage.setItem("instructionsSeen", "true");
+});

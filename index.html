@@ -14,9 +14,20 @@
 
 <header>
     <img src="logo.png" alt="Wood Calculator Logo">
+
+    <select id="language-select" class="language-select" aria-label="Language">
+        <option value="en">English</option>
+        <option value="si">සිංහල</option>
+        <option value="ta">தமிழ்</option>
+    </select>
 </header>
 
 <main>
+
+    <div class="ad-slot home-ad" id="home-ad">
+        <span>Advertisement</span>
+        <!-- AdSense banner code will go here later -->
+    </div>
 
     <div class="container">
 
@@ -259,6 +270,10 @@
                         <tr>
 
                             <th>
+                                Wood
+                            </th>
+
+                            <th>
                                 Width
                             </th>
 
@@ -441,7 +456,7 @@
                 SAVE BILL
             </span>
 
-            <h2>
+            <h2 id="save-modal-title">
                 Give your bill a name
             </h2>
 
@@ -490,6 +505,11 @@
                 Saved Bills
             </h2>
 
+            <div class="ad-slot saved-ad">
+                <span>Advertisement</span>
+                <!-- AdSense banner code will go here later -->
+            </div>
+
             <div id="saved-bills-list">
             </div>
 
@@ -520,9 +540,22 @@
                 BILL DETAILS
             </span>
 
-            <h2 id="view-bill-name">
-                Bill
-            </h2>
+            <div class="view-title-row">
+                <h2 id="view-bill-name">
+                    Bill
+                </h2>
+
+                <button
+                    type="button"
+                    class="icon-action"
+                    id="view-download-btn"
+                    title="Download bill"
+                    aria-label="Download bill"
+                    onclick="openDownloadModalFromView()"
+                >
+                    ↓
+                </button>
+            </div>
 
             <div id="view-bill-content">
             </div>
@@ -531,10 +564,91 @@
 
     </div>
 
+    <!-- =========================
+         DOWNLOAD BILL MODAL
+    ========================== -->
+
+    <div id="download-modal" class="modal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeDownloadModal()">×</button>
+
+            <span class="modal-small">DOWNLOAD BILL</span>
+
+            <h2>Business name</h2>
+
+            <input
+                type="text"
+                id="business-name"
+                placeholder="Example: ABC Timber Store"
+                maxlength="80"
+            >
+
+            <div class="download-format-grid">
+                <button class="download-format" onclick="downloadSavedBill('pdf')">
+                    <span class="format-icon">PDF</span>
+                    <span>Download PDF</span>
+                </button>
+
+                <button class="download-format" onclick="downloadSavedBill('image')">
+                    <span class="format-icon">IMG</span>
+                    <span>Save Image</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =========================
+         AD GATE PLACEHOLDER
+    ========================== -->
+
+    <div id="ad-gate-modal" class="modal">
+        <div class="modal-box ad-gate-box">
+            <span class="modal-small">ADVERTISEMENT</span>
+
+            <h2 id="ad-gate-title">Preparing...</h2>
+
+            <div class="ad-gate-placeholder">
+                <strong>Ad area</strong>
+                <span id="ad-gate-message">
+                    Your rewarded ad will appear here after you connect an ad provider.
+                </span>
+            </div>
+
+            <button
+                id="ad-gate-continue"
+                class="modal-action"
+                onclick="completeAdGate()"
+            >
+                Continue
+            </button>
+        </div>
+    </div>
+
 </main>
+
+<div id="instructions" class="instructions">
+    <div class="instructions-box">
+        <h2>Welcome to Wood Calculator 👋</h2>
+
+        <p>Here’s how to use the calculator:</p>
+
+        <ol>
+            <li>Select the wood type.</li>
+            <li>Enter the price per CFT.</li>
+            <li>Enter the wood dimensions.</li>
+            <li>Press Calculate.</li>
+            <li>Save your bill if needed.</li>
+        </ol>
+
+        <button id="closeInstructions">Got it</button>
+    </div>
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="script.js"></script>
 
 </body>
