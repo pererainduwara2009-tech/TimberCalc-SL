@@ -7,13 +7,13 @@
 
     <title>Wood Calculator</title>
 
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-    <img src="logo.png" alt="Wood Calculator Logo">
+    <img src="logo.svg" alt="Wood Calculator Logo">
 
     <select id="language-select" class="language-select" aria-label="Language">
         <option value="en">English</option>
@@ -215,11 +215,13 @@
                         </label>
 
                         <input
-                            type="number"
+                            type="text"
                             id="price"
                             placeholder="Enter price"
                             min="0"
                             step="0.01"
+                            inputmode="none"
+                            readonly
                         >
 
                     </div>
@@ -259,6 +261,15 @@
 
             </div>
 
+            <div class="first-bill-guide" id="first-bill-guide">
+                <strong id="first-bill-guide-title">First bill guide</strong>
+                <ol id="first-bill-guide-steps">
+                    <li>Enter Length, then press E.</li>
+                    <li>Enter Girth, then press E again.</li>
+                    <li>Check the result and add another item or save the bill.</li>
+                </ol>
+            </div>
+
 
             <div class="length-and-width">
 
@@ -270,7 +281,7 @@
                             1
                         </span>
 
-                        Length
+                        <span class="measurement-label-text">Length</span>
 
                         <small>
                             (ft)
@@ -279,26 +290,28 @@
                     </label>
 
                     <input
-                        type="number"
+                        type="text"
                         id="length"
                         class="length"
                         placeholder="0"
                         min="0"
                         step="0.01"
+                        inputmode="none"
+                        readonly
                     >
 
                 </div>
 
 
-                <div class="input-box" id="tour-width">
+                <div class="input-box" id="tour-girth">
 
-                    <label for="width">
+                    <label for="girth">
 
                         <span class="number">
                             2
                         </span>
 
-                        Width
+                        <span class="measurement-label-text">Girth</span>
 
                         <small>
                             (in)
@@ -307,12 +320,14 @@
                     </label>
 
                     <input
-                        type="number"
-                        id="width"
+                        type="text"
+                        id="girth"
                         class="calculator-input"
                         placeholder="0"
                         min="0"
                         step="0.01"
+                        inputmode="none"
+                        readonly
                     >
 
                 </div>
@@ -404,7 +419,7 @@
                             </th>
 
                             <th>
-                                Width
+                                Girth
                             </th>
 
                             <th>
@@ -467,7 +482,33 @@
     <section
         class="num-pad"
         id="num-pad"
+        aria-label="Number pad"
     >
+
+        <div class="num-pad-header">
+            <div>
+                <span class="num-pad-kicker">QUICK INPUT</span>
+                <strong id="num-pad-field">Length</strong>
+            </div>
+            <button
+                class="num-pad-close"
+                id="num-pad-close"
+                onclick="hide_numpad()"
+                type="button"
+                aria-label="Close number pad"
+                title="Close number pad"
+            >
+                ×
+            </button>
+        </div>
+
+        <button class="btn" onclick="numPress(1)" type="button">1</button>
+        <button class="btn" onclick="numPress(2)" type="button">2</button>
+        <button class="btn" onclick="numPress(3)" type="button">3</button>
+
+        <button class="btn" onclick="numPress(4)" type="button">4</button>
+        <button class="btn" onclick="numPress(5)" type="button">5</button>
+        <button class="btn" onclick="numPress(6)" type="button">6</button>
 
         <button class="btn" onclick="numPress(7)" type="button">7</button>
         <button class="btn" onclick="numPress(8)" type="button">8</button>
@@ -476,29 +517,42 @@
         <button
             class="btn clear"
             id="c"
-            onclick="clearInput()"
-            ondblclick="hide_numpad()"
+            onclick="backspaceInput()"
             type="button"
+            aria-label="Clear current input"
+            title="Clear"
         >
-            C
+            <span class="action-icon clear-icon" aria-hidden="true">⌫</span>
         </button>
 
-        <button class="btn" onclick="numPress(4)" type="button">4</button>
-        <button class="btn" onclick="numPress(5)" type="button">5</button>
-        <button class="btn" onclick="numPress(6)" type="button">6</button>
+        <button
+            class="btn zero"
+            onclick="numPress(0)"
+            type="button"
+        >
+            0
+        </button>
+
+        <button
+            class="btn decimal"
+            onclick="numPress('.')"
+            type="button"
+            aria-label="Decimal point"
+        >
+            .
+        </button>
 
         <button
             class="btn enter"
             id="e-btn"
             onclick="nextInput()"
             type="button"
+            aria-label="Enter and continue"
+            title="Enter"
         >
-            E
+            <span class="action-icon enter-icon" aria-hidden="true">↵</span>
+            <span>Enter</span>
         </button>
-
-        <button class="btn" onclick="numPress(1)" type="button">1</button>
-        <button class="btn" onclick="numPress(2)" type="button">2</button>
-        <button class="btn" onclick="numPress(3)" type="button">3</button>
 
     </section>
 
@@ -509,8 +563,14 @@
             id="show_num"
             onclick="show_numpad()"
             type="button"
+            aria-label="Open number pad"
+            title="Open number pad"
         >
-            Num
+            <span class="keypad-icon" aria-hidden="true">
+                <i></i><i></i><i></i>
+                <i></i><i></i><i></i>
+                <i></i><i></i><i></i>
+            </span>
         </button>
 
     </div>

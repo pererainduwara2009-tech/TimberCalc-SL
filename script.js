@@ -83,11 +83,18 @@ const translations = {
 
         advertisement: "Advertisement",
 
-        width: "Width",
+        width: "Girth",
+        girth: "Girth",
         length: "Length",
         cft: "CFT",
         priceColumn: "Price",
         action: "Action",
+        firstBillGuideTitle: "First bill guide",
+        firstBillGuideSteps: [
+            "Enter Length, then press Enter (E).",
+            "Enter Girth, then press Enter (E) again.",
+            "Check the result and add another item or save the bill."
+        ],
 
         welcomeTitle: "Welcome 👋",
         welcomeText: "Choose your language to get started.",
@@ -106,7 +113,7 @@ const translations = {
             {
                 icon: "📏",
                 title: "Enter dimensions",
-                text: "Enter the length in feet and width in inches."
+                text: "Tap Length to open the number pad. Enter Length, press E for Girth, then press E again to calculate and return to Length."
             },
             {
                 icon: "🧮",
@@ -172,10 +179,17 @@ const translations = {
         advertisement: "වෙළඳ දැන්වීම",
 
         width: "පළල",
+        girth: "වටේ දිග",
         length: "දිග",
         cft: "CFT",
         priceColumn: "මිල",
         action: "ක්‍රියාව",
+        firstBillGuideTitle: "පළමු බිල්පත සඳහා උපදෙස්",
+        firstBillGuideSteps: [
+            "දිග ඇතුළත් කර Enter (E) ඔබන්න.",
+            "වටේ දිග ඇතුළත් කර නැවත Enter (E) ඔබන්න.",
+            "ප්‍රතිඵලය බලන්න. තවත් අයිතමයක් එක් කරන්න හෝ බිල්පත සුරකින්න."
+        ],
 
         welcomeTitle: "සාදරයෙන් පිළිගනිමු 👋",
         welcomeText: "ආරම්භ කිරීමට ඔබගේ භාෂාව තෝරන්න.",
@@ -194,7 +208,7 @@ const translations = {
             {
                 icon: "📏",
                 title: "මාන ඇතුළත් කරන්න",
-                text: "දිග අඩි වලින් සහ පළල අඟල් වලින් ඇතුළත් කරන්න."
+                text: "දිග තට්ටු කළ විට අංක පෑඩය විවෘත වේ. දිග ඇතුළත් කර E ඔබා වට ප්‍රමාණය ඇතුළත් කරන්න. නැවත E ඔබා ගණනය කරන්න."
             },
             {
                 icon: "🧮",
@@ -260,10 +274,17 @@ const translations = {
         advertisement: "விளம்பரம்",
 
         width: "அகலம்",
+        girth: "சுற்றளவு",
         length: "நீளம்",
         cft: "CFT",
         priceColumn: "விலை",
         action: "செயல்",
+        firstBillGuideTitle: "முதல் பில் வழிகாட்டி",
+        firstBillGuideSteps: [
+            "நீளத்தை உள்ளிட்டு Enter (E) அழுத்தவும்.",
+            "சுற்றளவை உள்ளிட்டு மீண்டும் Enter (E) அழுத்தவும்.",
+            "முடிவைப் பார்த்து மற்றொரு பொருளைச் சேர்க்கவும் அல்லது பில்லை சேமிக்கவும்."
+        ],
 
         welcomeTitle: "வரவேற்கிறோம் 👋",
         welcomeText: "தொடங்க உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்.",
@@ -282,7 +303,7 @@ const translations = {
             {
                 icon: "📏",
                 title: "அளவுகளை உள்ளிடவும்",
-                text: "நீளத்தை அடியிலும் அகலத்தை அங்குலத்திலும் உள்ளிடவும்."
+                text: "நீளத்தைத் தட்டினால் எண் திண்டு திறக்கும். நீளத்தை உள்ளிட்டு E அழுத்தி சுற்றளவை உள்ளிடவும். மீண்டும் E அழுத்தினால் கணக்கிட்டு நீளத்திற்குத் திரும்பும்."
             },
             {
                 icon: "🧮",
@@ -506,6 +527,26 @@ function applyTranslations() {
 
     }
 
+    const lengthLabel =
+        document.querySelector(
+            "#tour-length .measurement-label-text"
+        );
+
+    const girthLabel =
+        document.querySelector(
+            "#tour-girth .measurement-label-text"
+        );
+
+    if (lengthLabel) {
+        lengthLabel.textContent =
+            t.length;
+    }
+
+    if (girthLabel) {
+        girthLabel.textContent =
+            t.girth;
+    }
+
 
     const sectionHeadings =
         document.querySelectorAll(
@@ -588,6 +629,30 @@ function applyTranslations() {
     if (savedButton) {
         savedButton.textContent =
             t.savedBills;
+    }
+
+    const firstBillGuideTitle =
+        document.getElementById(
+            "first-bill-guide-title"
+        );
+
+    const firstBillGuideSteps =
+        document.getElementById(
+            "first-bill-guide-steps"
+        );
+
+    if (firstBillGuideTitle) {
+        firstBillGuideTitle.textContent =
+            t.firstBillGuideTitle;
+    }
+
+    if (firstBillGuideSteps) {
+        firstBillGuideSteps.innerHTML =
+            t.firstBillGuideSteps
+                .map(function (step) {
+                    return "<li>" + escapeHTML(step) + "</li>";
+                })
+                .join("");
     }
 
 
@@ -710,7 +775,7 @@ function setupWelcome() {
 
 
                     hideWelcome();
-
+                    show_numpad();
 
                     setTimeout(
                         function () {
@@ -791,6 +856,7 @@ function initializeOnboarding() {
 
 
     hideWelcome();
+    show_numpad();
 
 
     const tutorialSeen =
@@ -1144,17 +1210,17 @@ function positionTutorial(target) {
 
     // Tutorial card
 
-    const cardWidth =
+    const cardGirth =
         Math.min(
             390,
-            window.innerWidth - 30
+            window.innerGirth - 30
         );
 
 
     let cardLeft =
         rect.left +
         rect.width / 2 -
-        cardWidth / 2;
+        cardGirth / 2;
 
 
     cardLeft =
@@ -1162,8 +1228,8 @@ function positionTutorial(target) {
             15,
             Math.min(
                 cardLeft,
-                window.innerWidth -
-                cardWidth -
+                window.innerGirth -
+                cardGirth -
                 15
             )
         );
@@ -1192,7 +1258,7 @@ function positionTutorial(target) {
 
 
     card.style.width =
-        `${cardWidth}px`;
+        `${cardGirth}px`;
 
     card.style.left =
         `${cardLeft}px`;
@@ -1369,76 +1435,47 @@ window.addEventListener(
 // CALCULATOR INPUTS
 // ======================================================
 
+
 function setupCalculatorInputs() {
 
-    const price =
-        document.getElementById(
-            "price"
-        );
+    const numericInputs = [
+        document.getElementById("price"),
+        document.getElementById("length"),
+        document.getElementById("girth")
+    ].filter(Boolean);
 
-    const length =
-        document.getElementById(
-            "length"
-        );
+    numericInputs.forEach(function (input) {
 
-    const width =
-        document.getElementById(
-            "width"
-        );
+        // Keep the browser/phone keyboard closed.
+        input.readOnly = true;
+        input.setAttribute("inputmode", "none");
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("spellcheck", "false");
 
+        input.addEventListener("click", function () {
+            selectedInput = input;
+            clearInputError(input);
+            updateNumPadField();
+            show_numpad();
+        });
 
-    if (price) {
+        input.addEventListener("focus", function () {
+            selectedInput = input;
+            updateNumPadField();
+            show_numpad();
+        });
 
-        price.addEventListener(
-            "focus",
-            function () {
-
-                selectedInput =
-                    price;
-
-            }
-        );
-
-    }
-
-
-    if (length) {
-
-        length.addEventListener(
-            "focus",
-            function () {
-
-                selectedInput =
-                    length;
-
-            }
-        );
-
-    }
-
-
-    if (width) {
-
-        width.addEventListener(
-            "focus",
-            function () {
-
-                selectedInput =
-                    width;
-
-            }
-        );
-
-    }
-
+    });
 
     selectedInput =
-        price;
+        document.getElementById("length") ||
+        numericInputs[0] ||
+        null;
 
 }
 
 
-// ======================================================
 // WOOD SELECTOR
 // ======================================================
 
@@ -1549,6 +1586,112 @@ function updateSelectedWood() {
 // CALCULATION
 // ======================================================
 
+function calculateCFT(p, l) {
+
+    return (
+        p *
+        p *
+        l
+    ) / 2304;
+
+}
+
+
+
+// ======================================================
+// LOAD AND REBUILD SAVED MEASUREMENTS
+// ======================================================
+
+async function getSavedBillItems(billId) {
+
+    const {
+        data: groups,
+        error
+    } = await supabaseClient
+        .from("bill_wood_types")
+        .select(`
+            id,
+            wood_type,
+            price_per_cft,
+            wood_measurements (
+                id,
+                length_ft,
+                girth_in
+            )
+        `)
+        .eq("bill_id", billId)
+        .order("id", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    // Bills created before this redesign can still be viewed and downloaded
+    // from the archived table. They are marked legacy and cannot be edited
+    // until the owner confirms the old Width values were actually girth.
+    if (!groups || groups.length === 0) {
+
+        const {
+            data: legacyRows,
+            error: legacyError
+        } = await supabaseClient
+            .from("wood_calculations")
+            .select("*")
+            .eq("bill_id", billId)
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending: true });
+
+        if (legacyError) {
+            throw legacyError;
+        }
+
+        return (legacyRows || []).map(function (item) {
+            return {
+                localId: "legacy-" + item.id,
+                wood_type: item.wood_type,
+                price_per_cft: Number(item.price_per_cft),
+                length_ft: Number(item.length_ft),
+                width_in: Number(item.width_in),
+                cft: Number(item.cft),
+                item_price: Number(item.item_price),
+                legacy: true
+            };
+        });
+    }
+
+    const items = [];
+
+    (groups || []).forEach(function (group) {
+
+        (group.wood_measurements || []).forEach(function (measurement) {
+
+            const price = Number(group.price_per_cft);
+            const length = Number(measurement.length_ft);
+            const girth = Number(measurement.girth_in);
+            const cft = calculateCFT(girth, length);
+
+            items.push({
+                localId: "saved-" + measurement.id,
+                wood_type: group.wood_type,
+                price_per_cft: price,
+                length_ft: length,
+
+                // Keep this property name for existing table/PDF rendering.
+                // Its value is GIRTH, not flat board width.
+                width_in: girth,
+
+                cft: cft,
+                item_price: cft * price
+            });
+
+        });
+
+    });
+
+    return items;
+}
+
+
 function calculation() {
 
     const woodSelect =
@@ -1566,9 +1709,9 @@ function calculation() {
             "length"
         );
 
-    const widthInput =
+    const girthInput =
         document.getElementById(
-            "width"
+            "girth"
         );
 
 
@@ -1576,9 +1719,9 @@ function calculation() {
         !woodSelect ||
         !priceInput ||
         !lengthInput ||
-        !widthInput
+        !girthInput
     ) {
-        return;
+        return false;
     }
 
 
@@ -1588,9 +1731,12 @@ function calculation() {
         ].text;
 
 
+    const enteredPrice =
+        parseFloat(priceInput.value);
+
     const price =
-        parseFloat(
-            priceInput.value
+        Number(
+            enteredPrice.toFixed(2)
         );
 
 
@@ -1600,23 +1746,23 @@ function calculation() {
         );
 
 
-    const width =
+    const girth =
         parseFloat(
-            widthInput.value
+            girthInput.value
         );
 
 
     if (
         isNaN(price) ||
         isNaN(length) ||
-        isNaN(width)
+        isNaN(girth)
     ) {
 
         alert(
             "Please enter all values."
         );
 
-        return;
+        return false;
 
     }
 
@@ -1624,35 +1770,23 @@ function calculation() {
     if (
         price < 0 ||
         length <= 0 ||
-        width <= 0
+        girth <= 0
     ) {
 
         alert(
             "Please enter valid values."
         );
 
-        return;
+        return false;
 
     }
 
 
-    // ==================================================
-    // CFT
-    // Formula:
-    // Length(ft) × Width(in) × Thickness(in) / 144
-    //
-    // Your original app uses width twice,
-    // so the same calculation is preserved:
-    //
-    // length × width × width / 2304
-    // ==================================================
-
     const cft =
-        (
-            length *
-            width *
-            width
-        ) / 2304;
+        calculateCFT(
+            girth,
+            length
+        );
 
 
     const itemPrice =
@@ -1675,7 +1809,7 @@ function calculation() {
             length,
 
         width_in:
-            width,
+            girth,
 
         cft:
             cft,
@@ -1696,10 +1830,12 @@ function calculation() {
 
     lengthInput.value = "";
 
-    widthInput.value = "";
+    girthInput.value = "";
 
 
     updateSelectedWood();
+
+    return true;
 
 }
 
@@ -1727,6 +1863,16 @@ function renderCurrentBill() {
 
 
     if (!body) return;
+
+    const firstBillGuide =
+        document.getElementById(
+            "first-bill-guide"
+        );
+
+    if (firstBillGuide) {
+        firstBillGuide.hidden =
+            currentItems.length > 0;
+    }
 
 
     body.innerHTML = "";
@@ -1849,6 +1995,13 @@ function renderCurrentBill() {
             currentItems.length > 0
                 ? "block"
                 : "none";
+
+        const languageText = translations[currentLanguage];
+
+        saveButton.textContent =
+            editingBillId
+                ? languageText.updateBill
+                : languageText.saveBill;
 
     }
 
@@ -2051,202 +2204,53 @@ async function confirmSaveBill() {
 // SAVE / UPDATE BILL
 // ======================================================
 
-async function saveBillToDatabase(
-    billName,
-    total
-) {
+
+
+async function saveBillToDatabase(billName, total) {
 
     try {
 
-        let billId =
-            editingBillId;
+        // The PostgreSQL function saves the bill and all child rows
+        // inside one transaction. If one insert fails, everything rolls back.
+        const measurements = currentItems.map(function (item) {
+            return {
+                wood_type: String(item.wood_type),
+                price_per_cft: Number(Number(item.price_per_cft).toFixed(2)),
+                length_ft: Number(Number(item.length_ft).toFixed(2)),
+                girth_in: Number(Number(item.width_in).toFixed(2))
+            };
+        });
 
+        const { error } = await supabaseClient.rpc("save_wood_bill", {
+            p_bill_id: editingBillId || null,
+            p_bill_name: billName,
+            p_total: total,
+            p_items: measurements
+        });
 
-        // ==================================================
-        // UPDATE
-        // ==================================================
+        if (error) throw error;
 
-        if (editingBillId) {
+        alert(editingBillId
+            ? "Bill updated successfully!"
+            : "Bill saved successfully!");
 
-            const {
-                error
-            } =
-                await supabaseClient
-                    .from("bills")
-                    .update({
-                        bill_name:
-                            billName,
-
-                        total:
-                            total
-                    })
-                    .eq(
-                        "id",
-                        editingBillId
-                    )
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    );
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            const {
-                error: deleteError
-            } =
-                await supabaseClient
-                    .from(
-                        "wood_calculations"
-                    )
-                    .delete()
-                    .eq(
-                        "bill_id",
-                        editingBillId
-                    )
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    );
-
-
-            if (deleteError) {
-                throw deleteError;
-            }
-
-        }
-
-
-        // ==================================================
-        // CREATE
-        // ==================================================
-
-        else {
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .from("bills")
-                    .insert({
-
-                        user_id:
-                            currentUser.id,
-
-                        bill_name:
-                            billName,
-
-                        total:
-                            total
-
-                    })
-                    .select()
-                    .single();
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            billId =
-                data.id;
-
-        }
-
-
-        // ==================================================
-        // ITEMS
-        // ==================================================
-
-        const rows =
-            currentItems.map(
-                function (item) {
-
-                    return {
-
-                        bill_id:
-                            billId,
-
-                        user_id:
-                            currentUser.id,
-
-                        wood_type:
-                            item.wood_type,
-
-                        price_per_cft:
-                            item.price_per_cft,
-
-                        length_ft:
-                            item.length_ft,
-
-                        width_in:
-                            item.width_in,
-
-                        cft:
-                            item.cft,
-
-                        item_price:
-                            item.item_price
-
-                    };
-
-                }
-            );
-
-
-        const {
-            error: itemError
-        } =
-            await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .insert(rows);
-
-
-        if (itemError) {
-            throw itemError;
-        }
-
-
-        alert(
-            editingBillId
-                ? "Bill updated successfully!"
-                : "Bill saved successfully!"
-        );
-
-
-        editingBillId =
-            null;
-
-
+        editingBillId = null;
         startNewBill();
 
-    }
-    catch (error) {
+    } catch (error) {
 
-        console.error(
-            "Save error:",
-            error
-        );
-
+        console.error("Save error:", error);
 
         alert(
             "Could not save the bill.\n\n" +
-            error.message
+            error.message +
+            "\n\nCheck that you ran the latest Supabase SQL, including the save_wood_bill function."
         );
 
     }
-
 }
 
 
-// ======================================================
 // CLOSE SAVE MODAL
 // ======================================================
 
@@ -2295,9 +2299,9 @@ function startNewBill() {
             "length"
         );
 
-    const width =
+    const girth =
         document.getElementById(
-            "width"
+            "girth"
         );
 
 
@@ -2313,8 +2317,8 @@ function startNewBill() {
         length.value = "";
 
 
-    if (width)
-        width.value = "";
+    if (girth)
+        girth.value = "";
 
 
     renderCurrentBill();
@@ -2549,299 +2553,115 @@ function closeSavedBills() {
 // OPEN SAVED BILL
 // ======================================================
 
-async function openSavedBill(
-    billId
-) {
+
+async function openSavedBill(billId) {
 
     if (!currentUser) return;
 
-
     try {
 
-        const {
-            data: bill,
-            error: billError
-        } =
-            await supabaseClient
-                .from("bills")
-                .select("*")
-                .eq(
-                    "id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .single();
+        const { data: bill, error: billError } = await supabaseClient
+            .from("bills")
+            .select("*")
+            .eq("id", billId)
+            .eq("user_id", currentUser.id)
+            .single();
 
+        if (billError) throw billError;
 
-        if (billError) {
-            throw billError;
-        }
+        const items = await getSavedBillItems(billId);
 
+        renderViewBill(bill, items);
 
-        const {
-            data: items,
-            error: itemError
-        } =
-            await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .select("*")
-                .eq(
-                    "bill_id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending: true
-                    }
-                );
-
-
-        if (itemError) {
-            throw itemError;
-        }
-
-
-        renderViewBill(
-            bill,
-            items || []
-        );
-
-    }
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
-
-        alert(
-            "Could not open bill.\n\n" +
-            error.message
-        );
+        alert("Could not open bill.\n\n" + error.message);
 
     }
-
 }
 
 
-// ======================================================
 // VIEW BILL
 // ======================================================
 
-function renderViewBill(
-    bill,
-    items
-) {
 
-    const modal =
-        document.getElementById(
-            "view-modal"
-        );
+function renderViewBill(bill, items) {
 
-    const title =
-        document.getElementById(
-            "view-bill-name"
-        );
+    const modal = document.getElementById("view-modal");
+    const title = document.getElementById("view-bill-name");
+    const content = document.getElementById("view-bill-content");
 
-    const content =
-        document.getElementById(
-            "view-bill-content"
-        );
+    if (!modal || !content) return;
 
-
-    if (
-        !modal ||
-        !content
-    ) {
-        return;
-    }
-
-
-    if (title) {
-
-        title.textContent =
-            bill.bill_name;
-
-    }
-
-
-    modal.dataset.billId =
-        bill.id;
-
+    if (title) title.textContent = bill.bill_name;
+    modal.dataset.billId = bill.id;
 
     let totalCFT = 0;
-
+    let calculatedTotal = 0;
+    const measurementHeading = items.some(function (item) {
+        return item.legacy;
+    }) ? "Width" : "Girth";
 
     let html = `
-
         <div class="view-bill-table">
-
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Wood
-                        </th>
-
-                        <th>
-                            Width
-                        </th>
-
-                        <th>
-                            Length
-                        </th>
-
-                        <th>
-                            CFT
-                        </th>
-
-                        <th>
-                            Price
-                        </th>
-
+                        <th>Wood</th>
+                        <th>${measurementHeading}</th>
+                        <th>Length</th>
+                        <th>CFT</th>
+                        <th>Price</th>
                     </tr>
-
                 </thead>
-
                 <tbody>
-
     `;
 
+    items.forEach(function (item) {
 
-    items.forEach(
-        function (item) {
+        totalCFT += Number(item.cft);
+        calculatedTotal += Number(item.item_price);
 
-            totalCFT +=
-                Number(
-                    item.cft
-                );
-
-
-            html += `
-
-                <tr>
-
-                    <td>
-                        ${escapeHTML(
-                            item.wood_type
-                        )}
-                    </td>
-
-                    <td>
-                        ${Number(
-                            item.width_in
-                        ).toFixed(2)}
-                    </td>
-
-                    <td>
-                        ${Number(
-                            item.length_ft
-                        ).toFixed(2)}
-                    </td>
-
-                    <td>
-                        ${Number(
-                            item.cft
-                        ).toFixed(3)}
-                    </td>
-
-                    <td>
-                        LKR
-                        ${Number(
-                            item.item_price
-                        ).toFixed(2)}
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
+        html += `
+            <tr>
+                <td>${escapeHTML(item.wood_type)}</td>
+                <td>${Number(item.width_in).toFixed(2)}</td>
+                <td>${Number(item.length_ft).toFixed(2)}</td>
+                <td>${Number(item.cft).toFixed(3)}</td>
+                <td>LKR ${Number(item.item_price).toFixed(2)}</td>
+            </tr>
+        `;
+    });
 
     html += `
-
                 </tbody>
-
             </table>
 
-
             <div class="view-summary">
-
                 <div class="view-summary-box">
-
-                    <small>
-                        Total CFT
-                    </small>
-
-                    <strong>
-                        ${totalCFT.toFixed(3)} CFT
-                    </strong>
-
+                    <small>Total CFT</small>
+                    <strong>${totalCFT.toFixed(3)} CFT</strong>
                 </div>
-
-
                 <div class="view-summary-box">
-
-                    <small>
-                        Price / CFT
-                    </small>
-
-                    <strong>
-                        Multiple
-                    </strong>
-
+                    <small>Price / CFT</small>
+                    <strong>Multiple</strong>
                 </div>
-
             </div>
-
 
             <div class="view-total">
-
-                <strong>
-                    Total
-                </strong>
-
-                <span>
-                    LKR
-                    ${Number(
-                        bill.total
-                    ).toFixed(2)}
-                </span>
-
+                <strong>Total</strong>
+                <span>LKR ${calculatedTotal.toFixed(2)}</span>
             </div>
-
         </div>
-
     `;
 
-
-    content.innerHTML =
-        html;
-
-
-    modal.classList.add(
-        "active"
-    );
-
-
+    content.innerHTML = html;
+    modal.classList.add("active");
     closeSavedBills();
-
 }
 
 
-// ======================================================
 // CLOSE VIEW BILL
 // ======================================================
 
@@ -2868,242 +2688,125 @@ function closeViewBill() {
 // EDIT SAVED BILL
 // ======================================================
 
-async function editSavedBill(
-    billId
-) {
+
+async function editSavedBill(billId) {
 
     if (!currentUser) return;
 
-
     try {
 
-        const {
-            data: bill,
-            error: billError
-        } =
-            await supabaseClient
-                .from("bills")
-                .select("*")
-                .eq(
-                    "id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .single();
+        const { data: bill, error: billError } = await supabaseClient
+            .from("bills")
+            .select("*")
+            .eq("id", billId)
+            .eq("user_id", currentUser.id)
+            .single();
 
+        if (billError) throw billError;
 
-        if (billError) {
-            throw billError;
+        const items = await getSavedBillItems(billId);
+
+        if (!items.length) {
+            throw new Error("This bill has no saved measurements.");
         }
 
-
-        const {
-            data: items,
-            error: itemError
-        } =
-            await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .select("*")
-                .eq(
-                    "bill_id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending: true
-                    }
-                );
-
-
-        if (itemError) {
-            throw itemError;
-        }
-
-
-        editingBillId =
-            billId;
-
-
-        currentItems =
-            (items || []).map(
-                function (item) {
-
-                    return {
-
-                        localId:
-                            Date.now() +
-                            Math.random(),
-
-                        wood_type:
-                            item.wood_type,
-
-                        price_per_cft:
-                            Number(
-                                item.price_per_cft
-                            ),
-
-                        length_ft:
-                            Number(
-                                item.length_ft
-                            ),
-
-                        width_in:
-                            Number(
-                                item.width_in
-                            ),
-
-                        cft:
-                            Number(
-                                item.cft
-                            ),
-
-                        item_price:
-                            Number(
-                                item.item_price
-                            )
-
-                    };
-
-                }
+        if (items.some(function (item) { return item.legacy; })) {
+            alert(
+                "This is an older bill. It can be viewed and downloaded, " +
+                "but cannot be edited in the new calculator until its old " +
+                "Width values are confirmed as girth and migrated."
             );
-
-
-        const billName =
-            document.getElementById(
-                "bill-name"
-            );
-
-
-        if (billName) {
-
-            billName.value =
-                bill.bill_name;
-
+            return;
         }
 
+        editingBillId = billId;
 
+        currentItems = items.map(function (item) {
+            return {
+                localId: Date.now() + Math.random(),
+                wood_type: item.wood_type,
+                price_per_cft: Number(item.price_per_cft),
+                length_ft: Number(item.length_ft),
+                width_in: Number(item.width_in),
+                cft: Number(item.cft),
+                item_price: Number(item.item_price)
+            };
+        });
+
+        const billName = document.getElementById("bill-name");
+        if (billName) billName.value = bill.bill_name;
+
+        // Keep the input settings aligned with the first saved item,
+        // so a newly added measurement does not use an unrelated price.
+        const firstItem = currentItems[0];
+        const woodSelect = document.getElementById("wood-type");
+        const priceInput = document.getElementById("price");
+
+        if (firstItem && woodSelect) {
+            const matchingOption = Array.from(woodSelect.options).find(function (option) {
+                return option.text.trim() === firstItem.wood_type.trim();
+            });
+
+            if (matchingOption) {
+                woodSelect.value = matchingOption.value;
+            }
+        }
+
+        if (firstItem && priceInput) {
+            priceInput.value = Number(firstItem.price_per_cft).toFixed(2);
+        }
+
+        updateSelectedWood();
         renderCurrentBill();
-
-
         closeSavedBills();
 
+        // Bring the user back to the calculator and show the saved bill name.
+        window.scrollTo({ top: 0, behavior: "smooth" });
 
-        saveBill();
+        alert("Bill loaded for editing. Press Update Bill when finished.");
 
-    }
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
-
-        alert(
-            "Could not edit bill.\n\n" +
-            error.message
-        );
+        alert("Could not edit bill.\n\n" + error.message);
 
     }
-
 }
 
 
-// ======================================================
 // DELETE SAVED BILL
 // ======================================================
 
-async function deleteSavedBill(
-    billId
-) {
+
+async function deleteSavedBill(billId) {
 
     if (!currentUser) return;
 
-
-    const confirmed =
-        confirm(
-            "Are you sure you want to delete this bill?"
-        );
-
-
+    const confirmed = confirm("Are you sure you want to delete this bill?");
     if (!confirmed) return;
-
 
     try {
 
-        const {
-            error: itemError
-        } =
-            await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .delete()
-                .eq(
-                    "bill_id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
+        const { error } = await supabaseClient
+            .from("bills")
+            .delete()
+            .eq("id", billId)
+            .eq("user_id", currentUser.id);
 
+        if (error) throw error;
 
-        if (itemError) {
-            throw itemError;
-        }
-
-
-        const {
-            error: billError
-        } =
-            await supabaseClient
-                .from("bills")
-                .delete()
-                .eq(
-                    "id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                );
-
-
-        if (billError) {
-            throw billError;
-        }
-
-
-        alert(
-            "Bill deleted successfully!"
-        );
-
-
+        alert("Bill deleted successfully!");
         await showSavedBills();
 
-    }
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
-
-        alert(
-            "Could not delete bill.\n\n" +
-            error.message
-        );
+        alert("Could not delete bill.\n\n" + error.message);
 
     }
-
 }
 
 
-// ======================================================
 // DOWNLOAD MODAL
 // ======================================================
 
@@ -3295,34 +2998,10 @@ async function generateBillDownload(
         }
 
 
-        const {
-            data: items,
-            error: itemError
-        } =
-            await supabaseClient
-                .from(
-                    "wood_calculations"
-                )
-                .select("*")
-                .eq(
-                    "bill_id",
-                    billId
-                )
-                .eq(
-                    "user_id",
-                    currentUser.id
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending: true
-                    }
-                );
-
-
-        if (itemError) {
-            throw itemError;
-        }
+        const items = await getSavedBillItems(billId);
+        const measurementHeading = items.some(function (item) {
+            return item.legacy;
+        }) ? "Width (in)" : "Girth (in)";
 
 
         let totalCFT = 0;
@@ -3432,7 +3111,7 @@ async function generateBillDownload(
 
                         <img
                             class="download-logo"
-                            src="logo.png"
+                            src="logo.svg"
                             alt="Logo"
                         >
 
@@ -3504,7 +3183,7 @@ async function generateBillDownload(
                             </th>
 
                             <th>
-                                Width (in)
+                                Girth (in)
                             </th>
 
                             <th>
@@ -3703,9 +3382,9 @@ async function generateBillDownload(
                 );
 
 
-            const pageWidth =
+            const pageGirth =
                 pdf.internal.pageSize
-                    .getWidth();
+                    .getGirth();
 
 
             const pageHeight =
@@ -3716,14 +3395,14 @@ async function generateBillDownload(
             const margin = 8;
 
 
-            const imageWidth =
-                pageWidth -
+            const imageGirth =
+                pageGirth -
                 margin * 2;
 
 
             const imageHeight =
                 canvas.height *
-                imageWidth /
+                imageGirth /
                 canvas.width;
 
 
@@ -3740,7 +3419,7 @@ async function generateBillDownload(
                 "PNG",
                 margin,
                 position,
-                imageWidth,
+                imageGirth,
                 imageHeight
             );
 
@@ -3768,7 +3447,7 @@ async function generateBillDownload(
                     "PNG",
                     margin,
                     position,
-                    imageWidth,
+                    imageGirth,
                     imageHeight
                 );
 
@@ -3946,52 +3625,45 @@ function cancelAdGate() {
 // NUMPAD
 // ======================================================
 
+
 function show_numpad() {
 
-    const numpad =
-        document.getElementById(
-            "num-pad"
-        );
-
-    const button =
-        document.getElementById(
-            "show_num"
-        );
-
+    const numpad = document.getElementById("num-pad");
+    const button = document.getElementById("show_num");
 
     if (!selectedInput) {
-
-        selectedInput =
-            document.getElementById(
-                "price"
-            );
-
+        selectedInput = document.getElementById("length");
     }
-
-
-    if (numpad) {
-
-        numpad.classList.add(
-            "active"
-        );
-
-    }
-
-
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
 
     if (selectedInput) {
-
-        selectedInput.focus();
-
+        selectedInput.readOnly = true;
+        selectedInput.setAttribute("inputmode", "none");
+        updateNumPadField();
     }
+
+    if (numpad) numpad.classList.add("active");
+    if (button) button.classList.add("active");
+}
+
+
+function updateNumPadField() {
+
+    const field =
+        document.getElementById(
+            "num-pad-field"
+        );
+
+    if (!field || !selectedInput) return;
+
+    const labels = {
+        price: "Price / CFT",
+        length: "Length",
+        girth: "Girth"
+    };
+
+    field.textContent =
+        labels[selectedInput.id] ||
+        "Number";
 
 }
 
@@ -4029,108 +3701,157 @@ function hide_numpad() {
 }
 
 
+
 function numPress(number) {
 
     if (!selectedInput) {
-
-        selectedInput =
-            document.getElementById(
-                "price"
-            );
-
+        selectedInput = document.getElementById("length");
     }
-
 
     if (!selectedInput) return;
 
+    clearInputError(selectedInput);
 
-    selectedInput.value +=
-        number;
+    let value = String(selectedInput.value || "");
 
+    if (number === ".") {
+        if (value.includes(".")) return;
+        if (value === "") value = "0";
+    } else {
+        if (value === "0") value = "";
+        const decimalPart = value.includes(".")
+            ? value.split(".")[1]
+            : "";
 
-    selectedInput.dispatchEvent(
-        new Event(
-            "input",
-            {
-                bubbles: true
-            }
-        )
-    );
+        if (value.includes(".") && decimalPart.length >= 2) return;
+        if (value.replace(".", "").length >= 10) return;
+    }
 
-
-    selectedInput.focus();
-
+    selectedInput.value = value + String(number);
+    selectedInput.dispatchEvent(new Event("input", { bubbles: true }));
+    updateNumPadField();
 }
-
 
 function clearInput() {
 
     if (!selectedInput) return;
 
-
+    clearInputError(selectedInput);
     selectedInput.value = "";
+    selectedInput.dispatchEvent(new Event("input", { bubbles: true }));
+    updateNumPadField();
+}
+
+function backspaceInput() {
+
+    if (!selectedInput) return;
+
+    clearInputError(selectedInput);
+    selectedInput.value = selectedInput.value.slice(0, -1);
+    selectedInput.dispatchEvent(new Event("input", { bubbles: true }));
+    updateNumPadField();
+}
 
 
-    selectedInput.focus();
+function hasInputValue(input) {
 
-
-    selectedInput.dispatchEvent(
-        new Event(
-            "input",
-            {
-                bubbles: true
-            }
-        )
+    return Boolean(
+        input &&
+        input.value.trim() !== ""
     );
+
+}
+
+
+function focusInvalidInput(input) {
+
+    if (!input) return;
+
+    input.classList.add(
+        "input-error"
+    );
+
+    selectedInput =
+        input;
+
+    show_numpad();
+    updateNumPadField();
+    input.focus();
+
+}
+
+
+function clearInputError(input) {
+
+    if (input) {
+        input.classList.remove(
+            "input-error"
+        );
+    }
 
 }
 
 
 function nextInput() {
 
-    const inputs = [
-
-        document.getElementById(
-            "price"
-        ),
-
+    const length =
         document.getElementById(
             "length"
-        ),
-
-        document.getElementById(
-            "width"
-        )
-
-    ];
-
-
-    const currentIndex =
-        inputs.indexOf(
-            selectedInput
         );
 
+    const girth =
+        document.getElementById(
+            "girth"
+        );
+
+    if (!length || !girth) return;
 
     if (
-        currentIndex >= 0 &&
-        currentIndex <
-        inputs.length - 1
+        selectedInput === length &&
+        !hasInputValue(length)
     ) {
+        focusInvalidInput(length);
+        return;
+    }
 
-        selectedInput =
-            inputs[
-                currentIndex + 1
-            ];
+    if (
+        selectedInput === girth &&
+        !hasInputValue(length)
+    ) {
+        focusInvalidInput(length);
+        return;
+    }
 
+    if (
+        selectedInput === girth &&
+        !hasInputValue(girth)
+    ) {
+        focusInvalidInput(girth);
+        return;
+    }
 
-        selectedInput.focus();
+    if (selectedInput === girth) {
+
+        const added = calculation();
+
+        if (added) {
+            selectedInput = length;
+            length.focus();
+            updateNumPadField();
+        }
+
+        return;
 
     }
-    else {
 
-        hide_numpad();
+    selectedInput =
+        selectedInput === length
+            ? girth
+            : length;
 
-    }
+    clearInputError(selectedInput);
+    selectedInput.focus();
+    updateNumPadField();
 
 }
 
